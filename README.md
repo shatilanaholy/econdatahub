@@ -19,7 +19,8 @@
 
 ## Technical Details for Adding More Data Sources
 
-The data file is separated from the index file. So, update the data.json file by following the schema -
+The data file is separated from the index file. So, update the `data.json` file by following the schema below -
+```json
 {
   "name": "Name of the Dataset",
   "desc": "A brief description of what the data contains.",
@@ -35,21 +36,22 @@ The data file is separated from the index file. So, update the data.json file by
   "vars": "Key variables like GDP, Wages, etc.",
   "papers": "Canonical citation or impact info."
 }
+```
 
-# Critical Rules for Integration
-* **Curriculum Array:** The curriculum field must be an array (enclosed in []). This allows the "polysemic" filtering to work. For example, use ["Labor", "Macroeconomics"] if the data applies to both.
+## Critical Rules for Integration
+* **Curriculum Array:** The curriculum field must be an array (enclosed in `[]`). This allows the "polysemic" filtering to work. For example, use ["Labor", "Macroeconomics"] if the data applies to both.
 * **Tier Values:** The tier field should strictly use one of these three values: Beginner, Intermediate, or Advanced.
 * **Course Names:** For the curriculum filter to find the data, use the standard names already in the dropdown: Labor, Energy, Trade, IO, Environmental, Game Theory, Public, Development, Finance, Econometrics, Macroeconomics, or Microeconomics.
 * **Automated Sorting:** You do not need to worry about where you place the new item in the file. The JavaScript in index.html is programmed to sort the entire list alphabetically by name every time the page loads.
 
-# Verification
-After saving the updated data.json, simply refresh your browser. The "Showing X sources" counter will automatically increment, and your new entry will appear in the grid/table and be searchable via the filters.
+## Verification
+After saving the updated `data.json`, simply refresh your browser. The "Showing X sources" counter will automatically increment, and your new entry will appear in the grid/table and be searchable via the filters.
 
 ## Author
 
-**Shatil Anaholy**
-Assistant Professor of Practice in Economics
-University of Nebraska - Lincoln
+**Shatil Anaholy**  
+*Assistant Professor of Practice in Economics  
+University of Nebraska - Lincoln*
 
 ## Disclaimer
 
