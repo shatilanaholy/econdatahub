@@ -1,40 +1,44 @@
-# EconDataHub: Public Use Data Resources for Economics
+# EconDataHub: Public Use Data Sources for Economics
 
 ## Overview
-**EconDataHub** is a single-page interactive web application designed to assist academic economists, researchers, and students in navigating the fragmented landscape of global public-use data. This tool serves as a centralized metadata repository, cataloging over 100 distinct data sources suitable for empirical research in fields such as applied microeconomics, macroeconomics, finance, and international development.
+**EconDataHub** is a specialized metadata repository and interactive web application designed to streamline data discovery for empirical economic research. Unlike general-purpose search engines, this platform provides a curated, constrained search environment tailored to the technical requirements of professional economists and students. It currently catalogs over 145 distinct data sources, including canonical longitudinal panels, national censuses, and administrative records from international organizations.
+
+The project utilizes a modular architecture where the application logic (`index.html`) is separate from the data registry (`data.json`), ensuring the repository is scalable and easily maintainable.
 
 ## Key Features
+* **Curated Data Registry:** A comprehensive list of 145+ unique sources across microeconomics, macroeconomics, finance, and international development.
+* **Granular Filtering (7 Dimensions):** Navigate the repository using filters for Region, Country, Difficulty Level, Course Relevance, Data Structure, and Frequency.
+* **Polysemic Search Logic:** Built-in support for multi-tagging ensures datasets correctly surface under multiple curriculum categories (e.g., the CPS appears under both "Labor" and "Public Economics").
+* **Difficulty Level Classification:** Each source is categorized as Beginner (foundational), Intermediate (standard surveys), or Advanced (administrative or high-dimensional data) to signal technical requirements.
+* **System-Aware Interface:** The application automatically adopts the viewer's OS or browser theme (Light/Dark mode) with a manual override toggle.
+* **Immediate Metadata Insights:** Entries surface key variables, units of analysis, and canonical academic citations before the user leaves the site.
 
-* **Comprehensive Registry:** Contains metadata for over 110 unique data sources, ranging from canonical US microdata (e.g., CPS, PSID, NLSY) to international macroeconomic indicators (e.g., World Bank WDI, Eurostat).
-* **Advanced Filtering:** Users can filter the repository by:
-    * **Region** (North America, Europe, Asia, Africa, Latin America, Oceania, Global)
-    * **Country** (Dynamic list populated based on available sources)
-    * **Economic Field** (Labor, Public Econ, Development, Finance, etc.)
-    * **Data Structure** (Panel, Cross-Sectional, Time Series)
-    * **Frequency** (Annual, Quarterly, Monthly, Daily)
-* **Smart Search:** Real-time search functionality allows users to locate datasets by name, variable, or topic.
-* **Adaptive Interface:** Features a responsive design with toggleable **Grid** and **Table** views.
-* **Dark Mode:** Integrated dark mode support (AMOLED black) for comfortable viewing in low-light environments.
-* **Detailed Insights:** Each entry includes specific details on key variables, language, frequency, and academic citations.
+## Contribution
+EconDataHub provides a distinct advantage over standard search engines by reducing the **transaction and search costs** (Stigler, 1961) associated with academic research:
 
-## Technical Details for Adding More Data Sources
+1. **Econometric Alignment:** While Google indexes the entire web, it cannot filter by data structure. EconDataHub allows researchers to identify "Panel" or "Time Series" data instantly, ensuring a source fits an identification strategy before documentation review begins.
+2. **Pedagogical Scaffolding:** By assigning difficulty tiers, the tool acts as a quality signal. It assists instructors in identifying datasets suitable for undergraduate term papers while guiding graduate students toward records that meet rigorous dissertation standards.
+3. **Noise Mitigation:** Broad search engines often return irrelevant commercial reports or news articles. EconDataHub provides a filtered environment containing only high-quality, peer-reviewed, or official institutional data.
+4. **Curriculum Mapping:** The project maps global datasets directly to the standard economics major curriculum, making it a direct pedagogical tool for students looking for data relevant to their specific coursework at the University of Nebraska-Lincoln.
 
-The data file is separated from the index file. So, update the `data.json` file by following the schema below -
+## Technical Details for Adding Data Sources
+To expand the registry, update the `data.json` file. Each new entry must follow this schema:
+
 ```json
 {
   "name": "Name of the Dataset",
-  "desc": "A brief description of what the data contains.",
-  "region": "The broad geographic region (e.g., Asia, North America)",
-  "country": "The specific country or 'Global'",
+  "desc": "A brief description of content.",
+  "region": "Geographic region (e.g., North America)",
+  "country": "Specific country or 'Global'",
   "language": "English, Spanish, etc.",
-  "unit": "The unit of analysis (e.g., Individual, Household, National)",
+  "unit": "Unit of analysis (e.g., Individual, Household)",
   "structure": "Cross-Sectional, Panel, or Time Series",
   "frequency": "Monthly, Quarterly, Annual, etc.",
   "curriculum": ["Labor", "Public"], 
   "tier": "Beginner",
-  "url": "https://link-to-data.org",
-  "vars": "Key variables like GDP, Wages, etc.",
-  "papers": "Canonical citation or impact info."
+  "url": "[https://link-to-data.org](https://link-to-data.org)",
+  "vars": "Key variables (e.g., GDP, Wages)",
+  "papers": "Canonical citation info."
 }
 ```
 
