@@ -17,22 +17,33 @@
 * **Dark Mode:** Integrated dark mode support (AMOLED black) for comfortable viewing in low-light environments.
 * **Detailed Insights:** Each entry includes specific details on key variables, language, frequency, and academic citations.
 
-## Technical Details
+## Technical Details for Adding More Data Sources
 
-The application is built as a self-contained Single Page Application (SPA).
+The data file is separated from the index file. So, update the data.json file by following the schema -
+{
+  "name": "Name of the Dataset",
+  "desc": "A brief description of what the data contains.",
+  "region": "The broad geographic region (e.g., Asia, North America)",
+  "country": "The specific country or 'Global'",
+  "language": "English, Spanish, etc.",
+  "unit": "The unit of analysis (e.g., Individual, Household, National)",
+  "structure": "Cross-Sectional, Panel, or Time Series",
+  "frequency": "Monthly, Quarterly, Annual, etc.",
+  "curriculum": ["Labor", "Public"], 
+  "tier": "Beginner",
+  "url": "https://link-to-data.org",
+  "vars": "Key variables like GDP, Wages, etc.",
+  "papers": "Canonical citation or impact info."
+}
 
-* **Format:** Single HTML file (`.html`).
-* **Dependencies:**
-    * **Tailwind CSS** (via CDN) for responsive styling and dark mode support.
-    * **FontAwesome** (via CDN) for iconography.
-    * **Chart.js** (via CDN) for visualization components (if enabled).
-* **No Installation Required:** The file runs directly in any modern web browser without a local server or backend dependencies.
+# Critical Rules for Integration
+* **Curriculum Array:** The curriculum field must be an array (enclosed in []). This allows the "polysemic" filtering to work. For example, use ["Labor", "Macroeconomics"] if the data applies to both.
+* **Tier Values:** The tier field should strictly use one of these three values: Beginner, Intermediate, or Advanced.
+* **Course Names:** For the curriculum filter to find the data, use the standard names already in the dropdown: Labor, Energy, Trade, IO, Environmental, Game Theory, Public, Development, Finance, Econometrics, Macroeconomics, or Microeconomics.
+* **Automated Sorting:** You do not need to worry about where you place the new item in the file. The JavaScript in index.html is programmed to sort the entire list alphabetically by name every time the page loads.
 
-## Usage
-
-1.  Download the `EconDataHub.html` file.
-2.  Open the file in any standard web browser (Chrome, Firefox, Safari, Edge).
-3.  An active internet connection is required to load the styling libraries (Tailwind and FontAwesome) from the CDN.
+# Verification
+After saving the updated data.json, simply refresh your browser. The "Showing X sources" counter will automatically increment, and your new entry will appear in the grid/table and be searchable via the filters.
 
 ## Author
 
