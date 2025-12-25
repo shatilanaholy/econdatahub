@@ -236,7 +236,7 @@
                             <div class="mt-1 flex flex-wrap gap-2" id="modal-badges"></div>
                             
                             <div class="mt-4">
-                                <p class="text-sm text-stone-500 dark:text-stone-400" id="modal-desc"></p>
+                                <p class="text-sm text-stone-500" id="modal-desc"></p>
                             </div>
 
                             <div class="mt-4 bg-sage-50 dark:bg-stone-950 p-3 rounded-lg border border-sage-100 dark:border-stone-800">
@@ -270,7 +270,7 @@
                     <a href="#" id="modal-link" target="_blank" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sage-600 hover:bg-sage-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-500 sm:ml-3 sm:w-auto sm:text-sm">
                         Visit Source
                     </a>
-                    <button type="button" id="modal-close-btn" class="mt-3 w-full inline-flex justify-center rounded-md border border-stone-300 dark:border-stone-700 shadow-sm px-4 py-2 bg-white dark:bg-stone-900 text-base font-medium text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="button" id="modal-close-btn" class="mt-3 w-full inline-flex justify-center rounded-md border border-stone-300 dark:border-stone-700 shadow-sm px-4 py-2 bg-white dark:bg-stone-900 text-base font-medium text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-500 sm:ml-3 sm:w-auto sm:text-sm">
                         Close
                     </button>
                 </div>
@@ -444,9 +444,29 @@
             tableContainer.classList.toggle('hidden', state.viewMode === 'grid');
         }));
 
+        // Theme Logic: Automatically follow OS/Browser settings
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        function applyTheme(e) {
+            const dark = e.matches;
+            if (dark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Initial apply based on current system setting
+        applyTheme(mq);
+
+        // Listen for real-time changes in system theme settings
+        mq.addEventListener('change', applyTheme);
+
+        // Manual toggle functionality
         themeToggleBtn.addEventListener('click', () => {
             document.documentElement.classList.toggle('dark');
-            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            // If the user manually toggles, you could choose to save this in localStorage.
+            // For purely automatic tracking, we avoid localStorage persistence.
         });
 
         modalCloseBtn.onclick = closeModal;
