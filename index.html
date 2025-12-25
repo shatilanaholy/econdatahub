@@ -25,16 +25,25 @@
                         sage: { 100: '#eaf4ea', 500: '#84a98c', 600: '#52796f' },
                         earth: { 500: '#d4a373', 600: '#e07a5f' }
                     },
-                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Merriweather', 'serif'] }
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
                 }
             }
         }
     </script>
+
     <style>
         body { transition: background-color 0.3s ease, color 0.3s ease; }
-        ::-webkit-scrollbar { width: 8px; }
+        .prose p { margin-bottom: 1rem; line-height: 1.75; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+        .dark ::-webkit-scrollbar-track { background: #1c1917; }
         .dark ::-webkit-scrollbar-thumb { background: #57534e; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #78716c; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col bg-stone-50 text-stone-900 dark:bg-black dark:text-stone-200">
@@ -47,9 +56,12 @@
                 <h1 class="text-xl sm:text-2xl font-bold font-serif text-stone-900 dark:text-white tracking-tight">EconData<span class="text-sage-600">Hub</span></h1>
             </div>
             <div class="flex items-center gap-3">
-                 <button id="theme-toggle" class="p-2 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white transition rounded-full hover:bg-stone-100 dark:hover:bg-stone-800">
+                 <button id="theme-toggle" class="p-2 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white transition rounded-full hover:bg-stone-100 dark:hover:bg-stone-800" title="Toggle Dark Mode">
                     <i class="fa-solid fa-moon dark:hidden"></i>
                     <i class="fa-solid fa-sun hidden dark:block"></i>
+                </button>
+                 <button id="view-mode-toggle" class="p-2 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white transition" title="Toggle View">
+                    <i class="fa-solid fa-table-list text-lg"></i>
                 </button>
             </div>
         </div>
@@ -57,67 +69,213 @@
 
     <!-- Main Content -->
     <main class="flex-grow">
-        <section id="motivation" class="max-w-4xl mx-auto px-4 py-12">
+        
+        <!-- Motivation Section -->
+        <section id="motivation" class="max-w-4xl mx-auto px-4 py-12 sm:py-16">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-serif font-bold text-stone-900 dark:text-white mb-4">Public Use Data Resources for Economics</h2>
                 <div class="w-24 h-1 bg-earth-500 mx-auto rounded-full"></div>
             </div>
-            <div class="prose prose-stone mx-auto text-lg text-stone-700 dark:text-stone-300 text-center">
-                <p>A curated catalog of public-use microeconomic, macroeconomic, and financial datasets.</p>
+            <div class="prose prose-stone mx-auto text-lg text-stone-700 dark:text-stone-300">
+                <p>
+                    EconDataHub catalogs over <strong>100 distinct public-use data sources</strong> spanning microeconomics, macroeconomics, finance, and development. This repository prioritizes high-quality, specific datasets (such as longitudinal surveys and official censuses) over generic portals. It includes the full IPUMS suite, major US panel studies, and comparable international datasets like CHARLS, ELSA, and LASI.
+                </p>
+                <p>
+                    <strong>Navigation:</strong> Use the <strong>Search</strong> bar or dropdown filters to explore the repository. Toggle between Grid and Table views using the icon in the header.
+                </p>
             </div>
         </section>
 
+        <!-- Repository Section -->
         <section id="repository" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            
             <!-- Filter Bar -->
-            <div class="bg-white dark:bg-stone-900 p-6 rounded-xl shadow-lg border border-stone-200 dark:border-stone-800 mb-8 -mt-12 relative z-10">
+            <div class="bg-white dark:bg-stone-900 p-6 rounded-xl shadow-lg border border-stone-200 dark:border-stone-800 mb-8 -mt-12 relative z-10 transition-colors duration-300">
                 <div class="flex flex-col gap-4">
-                    <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-stone-400"></i>
-                        <input type="text" id="search-input" placeholder="Search by name, country, or variables..." class="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-sage-500 outline-none dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                    <div class="w-full">
+                        <label class="block text-xs font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Search Repository</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-stone-400"></i>
+                            <input type="text" id="search-input" placeholder="Search by name, country, topic, or variables..." 
+                                class="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-sage-500 outline-none transition dark:bg-stone-950 dark:border-stone-800 dark:text-white dark:placeholder-stone-600">
+                        </div>
                     </div>
+
+                    <!-- Updated Grid for 6 items (5 filters + 1 reset) -->
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-                        <select id="region-filter" class="w-full px-3 py-2 bg-stone-50 border rounded-lg text-sm dark:bg-stone-950 dark:text-white"><option value="All">All Regions</option><option value="North America">North America</option><option value="Europe">Europe</option><option value="Asia">Asia</option><option value="Africa">Africa</option><option value="Latin America">Latin America</option><option value="Oceania">Oceania</option><option value="Global">Global</option></select>
-                        <select id="country-filter" class="w-full px-3 py-2 bg-stone-50 border rounded-lg text-sm dark:bg-stone-950 dark:text-white"><option value="All">All Countries</option></select>
-                        <select id="field-filter" class="w-full px-3 py-2 bg-stone-50 border rounded-lg text-sm dark:bg-stone-950 dark:text-white"><option value="All">All Fields</option><option value="Development">Development</option><option value="Education Econ">Education</option><option value="Finance">Finance</option><option value="Health Econ">Health</option><option value="Labor Econ">Labor Econ</option><option value="Macroeconomics">Macroeconomics</option><option value="Microeconomics">Microeconomics</option></select>
-                        <select id="structure-filter" class="w-full px-3 py-2 bg-stone-50 border rounded-lg text-sm dark:bg-stone-950 dark:text-white"><option value="All">All Structures</option><option value="Cross-Sectional">Cross-Sectional</option><option value="Panel">Panel</option><option value="Time Series">Time Series</option></select>
-                        <select id="frequency-filter" class="w-full px-3 py-2 bg-stone-50 border rounded-lg text-sm dark:bg-stone-950 dark:text-white"><option value="All">All Frequencies</option><option value="Annual">Annual</option><option value="Quarterly">Quarterly</option><option value="Monthly">Monthly</option></select>
-                        <button id="reset-filters" class="text-stone-400 hover:text-earth-600 underline text-sm">Reset</button>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Region</label>
+                            <select id="region-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                                <option value="All">All Regions</option>
+                                <option value="North America">North America</option>
+                                <option value="Europe">Europe</option>
+                                <option value="Asia">Asia</option>
+                                <option value="Africa">Africa</option>
+                                <option value="Latin America">Latin America</option>
+                                <option value="Oceania">Oceania</option>
+                                <option value="Global">Global/International</option>
+                            </select>
+                        </div>
+
+                        <!-- New Country Filter -->
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Country</label>
+                            <select id="country-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                                <option value="All">All Countries</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+
+                         <div>
+                            <label class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Economic Field</label>
+                            <select id="field-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                                <option value="All">All Fields</option>
+                                <option value="Development">Development</option>
+                                <option value="Education Econ">Education</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Health Econ">Health</option>
+                                <option value="Labor Econ">Labor Econ</option>
+                                <option value="Macroeconomics">Macroeconomics</option>
+                                <option value="Microeconomics">Microeconomics</option>
+                                <option value="Political Econ">Political Econ</option>
+                                <option value="Public Econ">Public Econ</option>
+                                <option value="Trade">Trade</option>
+                                <option value="Urban Econ">Urban Econ</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Data Structure</label>
+                            <select id="structure-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                                <option value="All">All Structures</option>
+                                <option value="Cross-Sectional">Cross-Sectional</option>
+                                <option value="Panel">Panel (Longitudinal)</option>
+                                <option value="Time Series">Time Series</option>
+                            </select>
+                        </div>
+
+                         <div>
+                            <label class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Frequency</label>
+                            <select id="frequency-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                                <option value="All">All Frequencies</option>
+                                <option value="Annual">Annual</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Monthly">Monthly</option>
+                                <option value="Daily">Daily/High-Freq</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-end pb-1">
+                            <button id="reset-filters" class="w-full text-center text-stone-400 hover:text-earth-600 dark:hover:text-earth-500 text-sm font-medium underline py-2">Reset Filters</button>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Count -->
+            <div class="flex justify-between items-center mb-6">
+                <p class="text-stone-500 dark:text-stone-400 text-sm">Showing <span id="visible-count" class="font-bold text-stone-900 dark:text-white">0</span> economic data sources</p>
+                <div class="flex gap-2">
+                   <button class="view-btn active text-stone-400 hover:text-stone-800 dark:hover:text-white" data-mode="grid"><i class="fa-solid fa-grid-2"></i> Grid</button>
+                   <button class="view-btn text-stone-400 hover:text-stone-800 dark:hover:text-white" data-mode="table"><i class="fa-solid fa-list"></i> Table</button>
                 </div>
             </div>
 
             <!-- Content Area -->
-            <div class="flex justify-between items-center mb-6">
-                <p class="text-stone-500 text-sm">Showing <span id="visible-count" class="font-bold text-stone-900 dark:text-white">0</span> sources</p>
-            </div>
+            <div id="content-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             
-            <div id="content-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Data cards will appear here -->
+            <!-- Table View -->
+            <div id="table-container" class="hidden bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden transition-colors duration-300">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-stone-200 dark:divide-stone-800">
+                        <thead class="bg-stone-50 dark:bg-stone-950">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Source</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Structure/Freq</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Region/Country</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Language</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="bg-white dark:bg-stone-900 divide-y divide-stone-200 dark:divide-stone-800"></tbody>
+                    </table>
+                </div>
             </div>
+
         </section>
+
     </main>
 
-    <footer class="bg-stone-900 text-stone-400 py-12 text-center">
-        <h5 class="text-white font-serif font-bold mb-4">About EconDataHub</h5>
-        <p class="text-sm italic">Created by Shatil Anaholy. &copy; 2025.</p>
+    <!-- Footer -->
+    <footer class="bg-stone-900 dark:bg-black border-t border-transparent dark:border-stone-800 text-stone-400 py-12 transition-colors duration-300">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h5 class="text-white font-serif font-bold mb-4">About EconDataHub</h5>
+            <p class="text-sm leading-relaxed mb-6">
+                This project is created by Shatil Anaholy with the help of Gemini.
+            </p>
+            <div class="bg-stone-800 dark:bg-stone-900 border border-stone-700 dark:border-stone-800 rounded p-4 mb-6 inline-block text-left">
+                <p class="text-xs text-stone-300 dark:text-stone-400">
+                    <strong>Disclaimer:</strong> The links provided in this resource have not been verified at the time of creating this project, so they may or may not work. Please use at your own discretion.
+                </p>
+            </div>
+            <p class="text-xs text-stone-600 dark:text-stone-500">&copy; 2025 Shatil Anaholy. For Educational Use.</p>
+        </div>
     </footer>
 
-    <!-- Detail Modal -->
-    <div id="detail-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen px-4">
-            <div class="fixed inset-0 bg-stone-900 bg-opacity-75" id="modal-backdrop"></div>
-            <div class="bg-white dark:bg-stone-900 rounded-lg p-6 max-w-2xl w-full z-10 shadow-xl border border-stone-200 dark:border-stone-800 relative">
-                <h3 id="modal-title" class="text-xl font-bold mb-2 text-stone-900 dark:text-white"></h3>
-                <div class="flex gap-2 mb-4" id="modal-badges"></div>
-                <p id="modal-desc" class="mb-4 text-stone-600 dark:text-stone-300"></p>
-                <div class="bg-stone-100 dark:bg-stone-800 p-3 rounded mb-4">
-                    <p class="text-xs uppercase font-bold text-stone-500 mb-1">Key Variables</p>
-                    <p id="modal-vars" class="font-mono text-sm text-stone-800 dark:text-stone-200"></p>
+    <!-- Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-stone-900 bg-opacity-75 dark:bg-opacity-90 transition-opacity" aria-hidden="true" id="modal-backdrop"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <div class="inline-block align-bottom bg-white dark:bg-stone-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full border border-stone-200 dark:border-stone-800">
+                <div class="bg-white dark:bg-stone-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-sage-100 dark:bg-sage-900 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fa-solid fa-file-invoice-dollar text-sage-600 dark:text-sage-300"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-medium text-stone-900 dark:text-white" id="modal-title">Dataset Name</h3>
+                            <div class="mt-1 flex flex-wrap gap-2" id="modal-badges"></div>
+                            
+                            <div class="mt-4">
+                                <p class="text-sm text-stone-500 dark:text-stone-400" id="modal-desc"></p>
+                            </div>
+
+                            <div class="mt-4 bg-sage-50 dark:bg-stone-950 p-3 rounded-lg border border-sage-100 dark:border-stone-800">
+                                <h4 class="text-xs font-bold uppercase text-sage-600 dark:text-sage-400 mb-2">Economic Fields</h4>
+                                <div class="flex flex-wrap gap-2" id="modal-fields"></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 mt-6 border-t border-stone-100 dark:border-stone-800 pt-4">
+                                <div>
+                                    <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Language</h4>
+                                    <p class="text-sm text-stone-800 dark:text-stone-200" id="modal-lang"></p>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Frequency</h4>
+                                    <p class="text-sm text-stone-800 dark:text-stone-200" id="modal-freq"></p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Key Variables</h4>
+                                <p class="text-sm text-stone-800 dark:text-stone-300 font-mono bg-stone-50 dark:bg-stone-950 p-2 rounded" id="modal-vars"></p>
+                            </div>
+                            <div class="mt-4">
+                                <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Citation / Impact</h4>
+                                <p class="text-sm text-stone-600 dark:text-stone-400 italic" id="modal-papers"></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-xs text-stone-500 mb-6 italic" id="modal-papers"></p>
-                <div class="flex justify-end gap-3">
-                    <button id="modal-close-btn" class="px-4 py-2 border rounded text-stone-600 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-800 dark:border-stone-700">Close</button>
-                    <a id="modal-link" href="#" target="_blank" class="px-4 py-2 bg-sage-600 text-white rounded hover:bg-sage-700">Visit Source</a>
+                <div class="bg-stone-50 dark:bg-stone-950 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-stone-100 dark:border-stone-800">
+                    <a href="#" id="modal-link" target="_blank" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sage-600 hover:bg-sage-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Visit Source
+                    </a>
+                    <button type="button" id="modal-close-btn" class="mt-3 w-full inline-flex justify-center rounded-md border border-stone-300 dark:border-stone-700 shadow-sm px-4 py-2 bg-white dark:bg-stone-900 text-base font-medium text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -125,133 +283,348 @@
 
     <!-- Application Logic -->
     <script>
+        const rawData = [
+            { name: "ABS (Australia)", desc: "Australian Bureau of Statistics. Comprehensive indicators for Oceania.", region: "Oceania", country: "Australia", language: "English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics", "Labor Econ"], url: "https://www.abs.gov.au/", vars: "CPI, GDP, Labor Force", papers: "ABS Methods" },
+            { name: "ACLED", desc: "Armed Conflict Location Data.", region: "Global", country: "Global", language: "English", unit: "Event", structure: "Event Data", frequency: "Daily", courses: ["Political Econ", "Development"], url: "https://acleddata.com/", vars: "Battles, Fatalities", papers: "Conflict Econ" },
+            { name: "Afrobarometer", desc: "Standard public opinion microdata for African nations.", region: "Africa", country: "Various", language: "English / French", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Varies", courses: ["Political Econ", "Development"], url: "https://www.afrobarometer.org/", vars: "Trust, Democracy score", papers: "Nunn (2008)" },
+            { name: "ANES", desc: "American National Election Studies.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Varies", courses: ["Political Econ"], url: "https://electionstudies.org/", vars: "Voting, Political views", papers: "Political Econ papers" },
+            { name: "B&B", desc: "Baccalaureate and Beyond.", region: "North America", country: "USA", language: "English", unit: "Student", structure: "Panel", frequency: "Varies", courses: ["Education Econ"], url: "https://nces.ed.gov/surveys/b&b/", vars: "Debt repayment", papers: "Scott-Clayton" },
+            { name: "Bank of England", desc: "BoE Data.", region: "Europe", country: "UK", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Daily", courses: ["Finance"], url: "https://www.bankofengland.co.uk/", vars: "Rates", papers: "BoE" },
+            { name: "Bank of Canada", desc: "Central bank and market rate database.", region: "North America", country: "Canada", language: "English / French", unit: "Time Series", structure: "Time Series", frequency: "Daily", courses: ["Finance"], url: "https://www.bankofcanada.ca/rates/", vars: "Policy Rate, Exchange Rates", papers: "BoC Research" },
+            { name: "BCRA Argentina", desc: "Central Bank of Argentina data.", region: "Latin America", country: "Argentina", language: "Spanish", unit: "Time Series", structure: "Time Series", frequency: "Daily", courses: ["Finance"], url: "http://www.bcra.gov.ar/", vars: "Reserves, Monetary Base", papers: "BCRA Reports" },
+            { name: "BIS Stats", desc: "Bank for International Settlements banking and financial data.", region: "Global", country: "Global", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Quarterly", courses: ["Finance"], url: "https://www.bis.org/statistics/", vars: "Credit gaps, FX turnover", papers: "BIS Papers" },
+            { name: "BLS Data Portal", desc: "Bureau of Labor Statistics data. Primary official source for inflation measurement and payroll employment growth.", region: "North America", country: "USA", language: "English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics", "Labor Econ"], url: "https://www.bls.gov/data/", vars: "CPI-U, PPI, JOLTS Job Openings, Total Nonfarm Payrolls", papers: "Stock & Watson (1999)" },
+            { name: "BPS Indonesia", desc: "Statistics Indonesia.", region: "Asia", country: "Indonesia", language: "Indonesian / English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Development"], url: "https://www.bps.go.id/en", vars: "Trade, Prices", papers: "BPS Reports" },
+            { name: "BRFSS", desc: "Behavioral Risk Factor Surveillance System.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Annual", courses: ["Health Econ"], url: "https://www.cdc.gov/brfss/", vars: "Obesity, Smoking", papers: "Cawley (2004)" },
+            { name: "Call Reports", desc: "Bank Financials (FFIEC).", region: "North America", country: "USA", language: "English", unit: "Bank", structure: "Panel", frequency: "Quarterly", courses: ["Finance"], url: "https://cdr.ffiec.gov/public/", vars: "Balance sheet", papers: "Banking Lit" },
+            { name: "CB Nigeria", desc: "Central Bank of Nigeria financial data.", region: "Africa", country: "Nigeria", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Monthly", courses: ["Finance"], url: "https://www.cbn.gov.ng/", vars: "Exchange Rates, Interest", papers: "CBN Reports" },
+            { name: "CE (Consumer Expenditure)", desc: "The official CE surveys measuring buying habits of American consumers via Interview and Diary methods.", region: "North America", country: "USA", language: "English", unit: "Household", structure: "Rotating Panel", frequency: "Quarterly", courses: ["Macroeconomics", "Public Econ"], url: "https://www.bls.gov/cex/", vars: "Total expenditures, Household Assets", papers: "Aguiar & Hurst (2005)" },
+            { name: "CEIC (Free)", desc: "Macro data aggregator samples.", region: "Global", country: "Various", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Daily", courses: ["Macroeconomics"], url: "https://www.ceicdata.com/en", vars: "Various Macro", papers: "N/A" },
+            { name: "Census Pulse", desc: "Small Business/Household Pulse Survey.", region: "North America", country: "USA", language: "English", unit: "Various", structure: "Repeated Cross-Section", frequency: "Weekly", courses: ["Macroeconomics"], url: "https://portal.census.gov/pulse/data/", vars: "Real-time impact", papers: "Crisis Econ" },
+            { name: "CES", desc: "Current Employment Statistics.", region: "North America", country: "USA", language: "English", unit: "Industry", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.bls.gov/ces/", vars: "Payrolls", papers: "Macro Labor" },
+            { name: "CFPS", desc: "China Family Panel Studies.", region: "Asia", country: "China", language: "Chinese/English", unit: "Family", structure: "Panel", frequency: "Biennial", courses: ["Labor Econ", "Development"], url: "http://www.isss.pku.edu.cn/cfps/en/", vars: "Health, Education", papers: "CFPS Papers" },
+            { name: "CHARLS", desc: "China Health and Retirement Longitudinal Study.", region: "Asia", country: "China", language: "Chinese", unit: "Individual", structure: "Panel", frequency: "Biennial", courses: ["Health Econ"], url: "http://charls.pku.edu.cn/", vars: "Aging", papers: "CHARLS" },
+            { name: "Chile INE", desc: "Chile Statistics.", region: "Latin America", country: "Chile", language: "Spanish", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.ine.cl/", vars: "IPC", papers: "INE Chile" },
+            { name: "CHNS", desc: "China Health and Nutrition Survey.", region: "Asia", country: "China", language: "English/Chinese", unit: "Individual", structure: "Panel", frequency: "Varies", courses: ["Health Econ"], url: "https://www.cpc.unc.edu/projects/china", vars: "Nutrition, Health", papers: "CHNS Papers" },
+            { name: "College Scorecard", desc: "US Dept of Education college outcomes data.", region: "North America", country: "USA", language: "English", unit: "Institution", structure: "Panel", frequency: "Annual", courses: ["Education Econ", "Public Econ"], url: "https://collegescorecard.ed.gov/data/", vars: "Debt, Earnings", papers: "Chetty et al. (2017)" },
+            { name: "Compustat", desc: "Financials for public firms.", region: "Global", country: "Global", language: "English", unit: "Firm", structure: "Panel", frequency: "Quarterly", courses: ["Finance"], url: "https://wrds-www.wharton.upenn.edu/", vars: "Assets, Sales", papers: "Corp Finance" },
+            { name: "CRSP", desc: "Security prices.", region: "North America", country: "USA", language: "English", unit: "Stock", structure: "Time Series", frequency: "Daily", courses: ["Finance"], url: "https://wrds-www.wharton.upenn.edu/", vars: "Price, Returns", papers: "Asset Pricing" },
+            { name: "DataFirst", desc: "Africa Microdata Portal.", region: "Africa", country: "South Africa", language: "English", unit: "Individual", structure: "Survey", frequency: "Varies", courses: ["Development"], url: "https://www.datafirst.uct.ac.za/", vars: "NIDS", papers: "DataFirst" },
+            { name: "Dartmouth Atlas", desc: "Health care variations.", region: "North America", country: "USA", language: "English", unit: "Region", structure: "Panel", frequency: "Annual", courses: ["Health Econ", "Public Econ"], url: "https://data.dartmouthatlas.org/", vars: "Medicare spending, End of life", papers: "Finkelstein et al. (2016)" },
+            { name: "Destatis", desc: "German Federal Statistics.", region: "Europe", country: "Germany", language: "German/English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.destatis.de/", vars: "Production", papers: "Destatis" },
+            { name: "ECB Data", desc: "European Central Bank.", region: "Europe", country: "Eurozone", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Daily", courses: ["Finance"], url: "https://sdw.ecb.europa.eu/", vars: "Money Supply", papers: "ECB" },
+            { name: "ECLS-K", desc: "Early Childhood Longitudinal Study.", region: "North America", country: "USA", language: "English", unit: "Child", structure: "Panel (Longitudinal)", frequency: "Varies", courses: ["Education Econ"], url: "https://nces.ed.gov/ecls/", vars: "Kindergarten readiness, Development", papers: "Fryer & Levitt (2004)" },
+            { name: "EIA Data", desc: "Energy Information Administration.", region: "North America", country: "USA", language: "English", unit: "Plant", structure: "Panel", frequency: "Monthly", courses: ["Energy Econ"], url: "https://www.eia.gov/", vars: "Energy prices", papers: "Energy Econ" },
+            { name: "ELSA", desc: "English Longitudinal Study of Ageing.", region: "Europe", country: "UK", language: "English", unit: "Individual", structure: "Panel", frequency: "Biennial", courses: ["Health Econ"], url: "https://www.elsa-project.ac.uk/", vars: "Aging", papers: "ELSA" },
+            { name: "EM-DAT", desc: "Disaster Database.", region: "Global", country: "Global", language: "English", unit: "Event", structure: "Event", frequency: "Daily", courses: ["Environmental"], url: "https://www.emdat.be/", vars: "Disaster", papers: "Climate" },
+            { name: "Eurostat", desc: "EU Statistics.", region: "Europe", country: "EU", language: "English", unit: "Region", structure: "Panel", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://ec.europa.eu/eurostat", vars: "HICP", papers: "EU Policy" },
+            { name: "European Social Survey", desc: "Attitudes and values in Europe.", region: "Europe", country: "EU", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Biennial", courses: ["Political Econ"], url: "https://www.europeansocialsurvey.org/", vars: "Trust", papers: "ESS" },
+            { name: "e-Stat Japan", desc: "Official statistics portal for Japan.", region: "Asia", country: "Japan", language: "English / Japanese", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.e-stat.go.jp/en", vars: "Tankan Survey, CPI Japan", papers: "Japanese Stats" },
+            { name: "FAOSTAT", desc: "UN Food and Agriculture data.", region: "Global", country: "Global", language: "English", unit: "Country", structure: "Panel", frequency: "Annual", courses: ["Development"], url: "https://www.fao.org/faostat/", vars: "Food prices, Production", papers: "Ag Econ" },
+            { name: "FARS", desc: "Fatality Analysis Reporting System.", region: "North America", country: "USA", language: "English", unit: "Accident", structure: "Admin Records", frequency: "Annual", courses: ["Health Econ", "Law & Econ"], url: "https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars", vars: "Fatalities", papers: "Safety Regs" },
+            { name: "FDIC SOD", desc: "Summary of Deposits.", region: "North America", country: "USA", language: "English", unit: "Branch", structure: "Panel", frequency: "Annual", courses: ["Finance", "IO"], url: "https://www5.fdic.gov/sod/", vars: "Branch deposits", papers: "Banking Comp" },
+            { name: "FEC Data", desc: "Federal Election Commission records.", region: "North America", country: "USA", language: "English", unit: "Candidate", structure: "Admin Records", frequency: "Varies", courses: ["Political Econ"], url: "https://www.fec.gov/data/", vars: "Contributions", papers: "Ansolabehere (2003)" },
+            { name: "FRED (St. Louis Fed)", desc: "The primary source for US macroeconomic time series including GDP and inflation.", region: "North America", country: "USA", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Daily", courses: ["Macroeconomics", "Finance"], url: "https://fred.stlouisfed.org/", vars: "Real GDP, CPI Inflation, Interest Rates", papers: "Bernanke (1999)" },
+            { name: "GDELT", desc: "Global Events Language Tone.", region: "Global", country: "Global", language: "English", unit: "Event", structure: "Event Data", frequency: "Daily", courses: ["Political Econ"], url: "https://www.gdeltproject.org/", vars: "Protests", papers: "Manacorda" },
+            { name: "Google Trends", desc: "Search Volume Index.", region: "Global", country: "Global", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Daily", courses: ["Macroeconomics"], url: "https://trends.google.com/", vars: "Search index", papers: "Stephens-Davidowitz" },
+            { name: "GovTrack", desc: "Congressional voting records.", region: "North America", country: "USA", language: "English", unit: "Legislator", structure: "Panel", frequency: "Varies", courses: ["Political Econ"], url: "https://www.govtrack.us/", vars: "Roll calls", papers: "Political Econ" },
+            { name: "GSOEP", desc: "German Socio-Economic Panel.", region: "Europe", country: "Germany", language: "German/English", unit: "Household", structure: "Panel", frequency: "Annual", courses: ["Labor Econ"], url: "https://www.diw.de/en/soep", vars: "Satisfaction", papers: "Frijters" },
+            { name: "GSO Vietnam", desc: "Vietnam Statistics.", region: "Asia", country: "Vietnam", language: "Vietnamese", unit: "National", structure: "Time Series", frequency: "Annual", courses: ["Development"], url: "https://www.gso.gov.vn/", vars: "GDP", papers: "GSO" },
+            { name: "GSS", desc: "General Social Survey.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Biennial", courses: ["Microeconomics"], url: "https://gss.norc.org/", vars: "Attitudes", papers: "Social Econ" },
+            { name: "Harvard Dataverse", desc: "Open data repository.", region: "Global", country: "Global", language: "English", unit: "Study", structure: "Various", frequency: "Varies", courses: ["All"], url: "https://dataverse.harvard.edu/", vars: "Various", papers: "Various" },
+            { name: "HILDA Australia", desc: "Household, Income and Labour Dynamics Australia.", region: "Oceania", country: "Australia", language: "English", unit: "Household", structure: "Panel", frequency: "Annual", courses: ["Labor Econ"], url: "https://melbourneinstitute.unimelb.edu.au/hilda", vars: "Satisfaction, Wealth", papers: "Shields et al." },
+            { name: "Historical Stats US", desc: "Historical Statistics of the US.", region: "North America", country: "USA", language: "English", unit: "National", structure: "Time Series", frequency: "Annual", courses: ["History"], url: "https://hsus.cambridge.org/", vars: "Prices 1790+", papers: "Econ History" },
+            { name: "HMDA", desc: "Home Mortgage Disclosure Act data.", region: "North America", country: "USA", language: "English", unit: "Loan", structure: "Cross-Sectional", frequency: "Annual", courses: ["Urban Econ", "Finance"], url: "https://ffiec.cfpb.gov/", vars: "Loan denials, Race", papers: "Munnell (1996)" },
+            { name: "HRS", desc: "Health and Retirement Study.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Panel", frequency: "Biennial", courses: ["Health Econ", "Labor Econ"], url: "https://hrs.isr.umich.edu/", vars: "Aging, Retirement, Health", papers: "Coile & Gruber (2007)" },
+            { name: "HSLS:09", desc: "High School Longitudinal Study of 2009.", region: "North America", country: "USA", language: "English", unit: "Student", structure: "Panel (Longitudinal)", frequency: "Varies", courses: ["Education Econ"], url: "https://nces.ed.gov/surveys/hsls09/", vars: "STEM paths, Math identity", papers: "Education Econ Papers" },
+            { name: "IBGE Brazil", desc: "Brazilian statistical institute for micro and macro indicators.", region: "Latin America", country: "Brazil", language: "Portuguese / English", unit: "National", structure: "Various", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.ibge.gov.br/", vars: "IPCA Inflation, PNAD Labor microdata", papers: "Brazilian Reports" },
+            { name: "ICPSR", desc: "Inter-university Consortium.", region: "Global", country: "Global", language: "English", unit: "Study", structure: "Various", frequency: "Varies", courses: ["All"], url: "https://www.icpsr.umich.edu/", vars: "Various", papers: "Archive" },
+            { name: "IEA Data", desc: "Energy Information Administration.", region: "North America", country: "USA", language: "English", unit: "Plant", structure: "Panel", frequency: "Monthly", courses: ["Energy Econ"], url: "https://www.eia.gov/", vars: "Energy prices", papers: "Energy Econ" },
+            { name: "IFLS Indonesia", desc: "Indonesian Family Life Survey microdata.", region: "Asia", country: "Indonesia", language: "English", unit: "Household", structure: "Panel", frequency: "Varies", courses: ["Development"], url: "https://www.rand.org/labor/FLS/IFLS.html", vars: "Nutrition, Schooling", papers: "Frankenberg" },
+            { name: "ILOSTAT", desc: "Global Labor Stats.", region: "Global", country: "Global", language: "English", unit: "Country", structure: "Panel", frequency: "Annual", courses: ["Labor Econ"], url: "https://ilostat.ilo.org/", vars: "Unemployment", papers: "ILO" },
+            { name: "IMF IFS", desc: "International Financial Statistics.", region: "Global", country: "Global", language: "English", unit: "Country", structure: "Time Series", frequency: "Monthly", courses: ["Finance"], url: "https://data.imf.org/", vars: "Reserves", papers: "IFS Docs" },
+            { name: "IMF WEO", desc: "World Economic Outlook. Projections and historical data.", region: "Global", country: "Global", language: "English", unit: "Country", structure: "Panel", frequency: "Semiannual", courses: ["Macroeconomics"], url: "https://www.imf.org/en/Publications/WEO", vars: "Growth forecasts, Debt ratios", papers: "IMF Research" },
+            { name: "INE Spain", desc: "Instituto Nacional de Estadística. Spain indicators.", region: "Europe", country: "Spain", language: "Spanish / English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.ine.es/en/", vars: "EPA Labor, Tourism Index", papers: "INE Reports" },
+            { name: "INE Portugal", desc: "Portugal Statistics.", region: "Europe", country: "Portugal", language: "Portuguese", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.ine.pt/", vars: "Inflation", papers: "INE" },
+            { name: "INEGI Mexico", desc: "Mexico official statistical and geographical database.", region: "Latin America", country: "Mexico", language: "Spanish / English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://en.www.inegi.org.mx/", vars: "Mexican GDP, CPI Mexico", papers: "Mexican Policy" },
+            { name: "INSEE France", desc: "National Institute of Statistics for the French economy.", region: "Europe", country: "France", language: "French / English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.insee.fr/en/", vars: "CPI France, Growth rate", papers: "INSEE Studies" },
+            { name: "Ipeadata", desc: "Brazil Econ Data.", region: "Latin America", country: "Brazil", language: "Portuguese/English", unit: "Time Series", structure: "Time Series", frequency: "Daily", courses: ["Macroeconomics"], url: "http://www.ipeadata.gov.br/", vars: "Rates", papers: "Ipea" },
+            { name: "IPEDS", desc: "Integrated Postsecondary Education Data System.", region: "North America", country: "USA", language: "English", unit: "Institution", structure: "Panel", frequency: "Annual", courses: ["Education Econ", "IO"], url: "https://nces.ed.gov/ipeds/", vars: "Tuition, Enrollment", papers: "Hoxby (2000)" },
+            { name: "IPUMS AHTUS", desc: "American Heritage Time Use Study (Historical).", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Varies", courses: ["Labor Econ", "History"], url: "https://ahtus.ipums.org/", vars: "Historical time use", papers: "Gershuny (2000)" },
+            { name: "IPUMS ATUS", desc: "American Time Use Survey harmonized data.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Cross-Sectional", frequency: "Annual", courses: ["Labor Econ", "Family Econ"], url: "https://atus.ipums.org/", vars: "Time use, Activities", papers: "Aguiar & Hurst (2007)" },
+            { name: "IPUMS CPS", desc: "Harmonized Current Population Survey. Primary source for official US labor force statistics and unemployment monthly rates.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Monthly", courses: ["Labor Econ", "Public Econ", "Macroeconomics"], url: "https://cps.ipums.org/", vars: "Employment Status, Hourly Earnings, Weekly Hours, Education", papers: "Angrist & Evans (1998)" },
+            { name: "IPUMS Health (MEPS)", desc: "Harmonized Medical Expenditure Panel Survey.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Panel", frequency: "Annual", courses: ["Health Econ"], url: "https://meps.ipums.org/", vars: "Medical spending, Costs", papers: "Cutler et al. (2008)" },
+            { name: "IPUMS Health (NHIS)", desc: "Harmonized National Health Interview Survey.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Annual", courses: ["Health Econ"], url: "https://nhis.ipums.org/", vars: "Health status, Insurance", papers: "Currie & Gruber (1996)" },
+            { name: "IPUMS Higher Ed", desc: "National Survey of College Graduates (SESTAT).", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Biennial", courses: ["Labor Econ", "Education Econ"], url: "https://highered.ipums.org/", vars: "STEM careers, Degrees", papers: "Stephan (2012)" },
+            { name: "IPUMS IHGIS", desc: "International Historical Geographic Information System.", region: "Global", country: "Global", language: "English", unit: "Region", structure: "Time Series", frequency: "Varies", courses: ["Development", "Urban Econ"], url: "https://ihgis.ipums.org/", vars: "Global Census boundaries", papers: "IHGIS Team" },
+            { name: "IPUMS International", desc: "Harmonized census microdata from 100+ countries.", region: "Global", country: "Global", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Varies", courses: ["Development", "Labor Econ"], url: "https://international.ipums.org/", vars: "Education, Employment", papers: "Hanson (2010)" },
+            { name: "IPUMS NHGIS", desc: "National Historical Geographic Information System.", region: "North America", country: "USA", language: "English", unit: "Region", structure: "Time Series", frequency: "Decennial", courses: ["Urban Econ", "History"], url: "https://www.nhgis.org/", vars: "Census tracts, GIS boundaries", papers: "Logan (2014)" },
+            { name: "IPUMS Terra", desc: "Integrated population and environmental data.", region: "Global", country: "Global", language: "English", unit: "Region", structure: "Spatial", frequency: "Varies", courses: ["Environmental", "Development"], url: "https://terra.ipums.org/", vars: "Climate, Land use", papers: "Nugent (2016)" },
+            { name: "IPUMS USA (ACS/Census)", desc: "Harmonized American Community Survey & Census data.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Annual", courses: ["Labor Econ", "Urban Econ"], url: "https://usa.ipums.org/", vars: "Income, Migration, Housing", papers: "Chetty et al. (2014)" },
+            { name: "Istat", desc: "Italian National Statistics.", region: "Europe", country: "Italy", language: "Italian/English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.istat.it/", vars: "Prices", papers: "Istat" },
+            { name: "JOLTS", desc: "Job Openings and Labor Turnover Survey.", region: "North America", country: "USA", language: "English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Labor Econ", "Macroeconomics"], url: "https://www.bls.gov/jlt/", vars: "Vacancies, Quits", papers: "Davis et al. (2006)" },
+            { name: "JSTAR", desc: "Japanese Study of Aging and Retirement.", region: "Asia", country: "Japan", language: "Japanese", unit: "Individual", structure: "Panel", frequency: "Biennial", courses: ["Health Econ"], url: "https://www.rieti.go.jp/en/projects/jstar/", vars: "Retirement", papers: "JSTAR" },
+            { name: "Kaggle", desc: "Data Science Platform.", region: "Global", country: "Global", language: "English", unit: "Various", structure: "Various", frequency: "Varies", courses: ["Econometrics"], url: "https://www.kaggle.com/datasets", vars: "Various", papers: "Crowdsourced" },
+            { name: "Kenneth French", desc: "Asset Pricing Factors.", region: "Global", country: "USA", language: "English", unit: "Portfolio", structure: "Time Series", frequency: "Daily", courses: ["Finance"], url: "https://mba.tuck.dartmouth.edu/", vars: "Factors", papers: "Fama French" },
+            { name: "KLIPS Korea", desc: "Korean Labor & Income Panel Study.", region: "Asia", country: "South Korea", language: "English / Korean", unit: "Household", structure: "Panel", frequency: "Annual", courses: ["Labor Econ"], url: "https://www.kli.re.kr/klips/index.do", vars: "Labor supply", papers: "KLIPS Team" },
+            { name: "KNBS", desc: "Kenya Statistics.", region: "Africa", country: "Kenya", language: "English", unit: "National", structure: "Time Series", frequency: "Quarterly", courses: ["Development"], url: "https://www.knbs.or.ke/", vars: "CPI", papers: "KNBS" },
+            { name: "KOSIS", desc: "Korean Statistical Info.", region: "Asia", country: "South Korea", language: "Korean/English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://kosis.kr/", vars: "Trade", papers: "KOSIS" },
+            { name: "LASI", desc: "Longitudinal Aging Study in India.", region: "Asia", country: "India", language: "English", unit: "Individual", structure: "Panel", frequency: "Biennial", courses: ["Health Econ"], url: "https://www.iipsindia.ac.in/lasi", vars: "Aging", papers: "LASI" },
+            { name: "Latinobarómetro", desc: "LatAm Public Opinion.", region: "Latin America", country: "Various", language: "Spanish", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Annual", courses: ["Political Econ"], url: "https://www.latinobarometro.org/", vars: "Democracy", papers: "LatAm Opinion" },
+            { name: "LAUS", desc: "Local Area Unemployment Stats.", region: "North America", country: "USA", language: "English", unit: "County", structure: "Time Series", frequency: "Monthly", courses: ["Labor Econ", "Urban Econ"], url: "https://www.bls.gov/lau/", vars: "Unemployment", papers: "Local Labor" },
+            { name: "LISS Panel", desc: "Dutch longitudinal internet social panel.", region: "Europe", country: "Netherlands", language: "Dutch / English", unit: "Individual", structure: "Panel", frequency: "Monthly", courses: ["Microeconomics"], url: "https://www.lissdata.nl/", vars: "Health, Religion, Income", papers: "LISS Studies" },
+            { name: "LIS", desc: "Luxembourg Income Study.", region: "Global", country: "Global", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Varies", courses: ["Labor Econ", "Inequality"], url: "https://www.lisdatacenter.org/", vars: "Income", papers: "Inequality" },
+            { name: "Lobbying Disclosure", desc: "Senate Lobbying Data.", region: "North America", country: "USA", language: "English", unit: "Firm", structure: "Admin Records", frequency: "Quarterly", courses: ["Political Econ", "IO"], url: "https://lda.senate.gov/", vars: "Lobbying amount, Issues", papers: "Bertrand et al. (2014)" },
+            { name: "Maddison Project", desc: "Historical GDP.", region: "Global", country: "Global", language: "English", unit: "Country", structure: "Panel", frequency: "Annual", courses: ["History"], url: "https://www.rug.nl/ggdc/historicaldevelopment/maddison/", vars: "Hist GDP", papers: "Maddison" },
+            { name: "MEPS", desc: "Medical Expenditure Panel Survey.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Panel (Short)", frequency: "Annual", courses: ["Health Econ"], url: "https://meps.ahrq.gov/", vars: "Medical costs, Prescriptions", papers: "Cutler et al. (2008)" },
+            { name: "MOSPI India", desc: "Official Indian source for National Accounts and sample surveys.", region: "Asia", country: "India", language: "English", unit: "National", structure: "Various", frequency: "Annual", courses: ["Development"], url: "https://mospi.gov.in/", vars: "National Accounts, NSSO Data", papers: "Indian Econ Journals" },
+            { name: "MxFLS", desc: "Mexican Family Life Survey.", region: "Latin America", country: "Mexico", language: "Spanish/English", unit: "Household", structure: "Panel", frequency: "Varies", courses: ["Development"], url: "http://www.ennvih-mxfls.org/", vars: "Migration", papers: "MxFLS" },
+            { name: "NBS China", desc: "National Bureau of Statistics of China. Official macro indicators.", region: "Asia", country: "China", language: "Chinese / English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "http://www.stats.gov.cn/", vars: "PMI, Retail Sales, GDP Growth", papers: "Zheng & Song (2014)" },
+            { name: "NBS Nigeria", desc: "Nigeria Statistics.", region: "Africa", country: "Nigeria", language: "English", unit: "National", structure: "Time Series", frequency: "Quarterly", courses: ["Development"], url: "https://nigerianstat.gov.ng/", vars: "GDP", papers: "NBS" },
+            { name: "NCVS", desc: "National Crime Victimization Survey.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Annual", courses: ["Law & Econ"], url: "https://bjs.ojp.gov/", vars: "Crime reporting", papers: "Levitt (various)" },
+            { name: "NHIS", desc: "National Health Interview Survey.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Repeated Cross-Section", frequency: "Annual", courses: ["Health Econ"], url: "https://www.cdc.gov/nchs/nhis/index.htm", vars: "Health status, Insurance", papers: "Currie & Gruber (1996)" },
+            { name: "NHTS", desc: "National Household Travel Survey.", region: "North America", country: "USA", language: "English", unit: "Trip", structure: "Repeated Cross-Section", frequency: "Varies", courses: ["Urban Econ", "Environmental"], url: "https://nhts.ornl.gov/", vars: "Commuting", papers: "Transport Econ" },
+            { name: "NIPA (BEA)", desc: "National Income and Product Accounts measuring US economic activity.", region: "North America", country: "USA", language: "English", unit: "National", structure: "Time Series", frequency: "Quarterly", courses: ["Macroeconomics"], url: "https://www.bea.gov/", vars: "GDP components, Consumption", papers: "Kuznets (1934)" },
+            { name: "NLSY", desc: "National Longitudinal Surveys of Youth (79, 97).", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Panel", frequency: "Biennial", courses: ["Labor Econ", "Education Econ"], url: "https://www.nlsinfo.org/", vars: "AFQT, Work History", papers: "Neal & Johnson (1996)" },
+            { name: "NPSAS", desc: "National Postsecondary Student Aid Study.", region: "North America", country: "USA", language: "English", unit: "Student", structure: "Repeated Cross-Section", frequency: "Triennial", courses: ["Education Econ"], url: "https://nces.ed.gov/surveys/npsas/", vars: "Financial aid", papers: "Dynarski" },
+            { name: "OECD Stats", desc: "OECD Statistics.", region: "Global", country: "OECD", language: "English", unit: "Country", structure: "Panel", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://stats.oecd.org/", vars: "CPI", papers: "OECD" },
+            { name: "O*NET", desc: "Occupational Information Network.", region: "North America", country: "USA", language: "English", unit: "Occupation", structure: "Cross-Sectional", frequency: "Annual", courses: ["Labor Econ"], url: "https://www.onetonline.org/", vars: "Skills, Tasks", papers: "Autor et al. (2003)" },
+            { name: "ONS (UK)", desc: "Office for National Statistics.", region: "Europe", country: "UK", language: "English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.ons.gov.uk/", vars: "UK GDP", papers: "ONS" },
+            { name: "OpenSecrets", desc: "Money in politics data.", region: "North America", country: "USA", language: "English", unit: "Various", structure: "Aggregated", frequency: "Varies", courses: ["Political Econ"], url: "https://www.opensecrets.org/", vars: "Donations, Lobbying", papers: "Political Econ" },
+            { name: "Opportunity Atlas", desc: "Social mobility outcomes by census tract.", region: "North America", country: "USA", language: "English", unit: "Tract", structure: "Cross-Sectional", frequency: "Varies", courses: ["Public Econ", "Labor Econ"], url: "https://www.opportunityatlas.org/", vars: "Incarceration, Income rank", papers: "Chetty et al. (2018)" },
+            { name: "Opportunity Insights", desc: "Chetty Lab aggregated tax data.", region: "North America", country: "USA", language: "English", unit: "Region", structure: "Panel", frequency: "Annual", courses: ["Public Econ"], url: "https://opportunityinsights.org/data/", vars: "Mobility, Education", papers: "Chetty et al." },
+            { name: "Patent Public Search", desc: "USPTO Patent Data.", region: "North America", country: "USA", language: "English", unit: "Patent", structure: "Cross-Sectional", frequency: "Daily", courses: ["IO", "Innovation"], url: "https://ppubs.uspto.gov/", vars: "Citations", papers: "Bloom et al. (2013)" },
+            { name: "Penn World Table", desc: "PWT Real GDP.", region: "Global", country: "Global", language: "English", unit: "Country", structure: "Panel", frequency: "Annual", courses: ["Macroeconomics"], url: "https://www.rug.nl/ggdc/productivity/pwt/", vars: "TFP", papers: "Mankiw" },
+            { name: "Physician Compare", desc: "CMS data on doctors.", region: "North America", country: "USA", language: "English", unit: "Physician", structure: "Cross-Sectional", frequency: "Annual", courses: ["Health Econ", "IO"], url: "https://data.cms.gov/", vars: "Specialty, Affiliation", papers: "Health Supply papers" },
+            { name: "Polity V", desc: "Regime Authority.", region: "Global", country: "Global", language: "English", unit: "Country-Year", structure: "Panel", frequency: "Annual", courses: ["Political Econ"], url: "https://www.systemicpeace.org/", vars: "Democracy", papers: "Polity" },
+            { name: "PSID", desc: "Panel Study of Income Dynamics.", region: "North America", country: "USA", language: "English", unit: "Family", structure: "Panel", frequency: "Biennial", courses: ["Labor Econ", "Family Econ"], url: "https://psidonline.isr.umich.edu/", vars: "Wealth, Intergenerational Mobility", papers: "Solon (1992)" },
+            { name: "QWI", desc: "Quarterly Workforce Indicators.", region: "North America", country: "USA", language: "English", unit: "County", structure: "Panel", frequency: "Quarterly", courses: ["Labor Econ", "Urban Econ"], url: "https://lehd.ces.census.gov/data/", vars: "Hires, Separations", papers: "Abowd et al. (2009)" },
+            { name: "RBA", desc: "Reserve Bank Australia.", region: "Oceania", country: "Australia", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Daily", courses: ["Finance"], url: "https://www.rba.gov.au/", vars: "Cash Rate", papers: "RBA" },
+            { name: "RBI Data", desc: "Reserve Bank of India.", region: "Asia", country: "India", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Weekly", courses: ["Finance"], url: "https://dbie.rbi.org.in/", vars: "Banking", papers: "RBI" },
+            { name: "ReplicationWiki", desc: "Database of replicated studies.", region: "Global", country: "Global", language: "English", unit: "Study", structure: "Metadata", frequency: "Varies", courses: ["Econometrics"], url: "https://replication.uni-goettingen.de/", vars: "Data links", papers: "Meta-science" },
+            { name: "RLMS-HSE", desc: "Russia Longitudinal Monitoring Survey.", region: "Europe", country: "Russia", language: "Russian", unit: "Household", structure: "Panel", frequency: "Annual", courses: ["Labor Econ"], url: "https://rlms-hse.cpc.unc.edu/", vars: "Health", papers: "RLMS" },
+            { name: "Rosstat", desc: "Russian Federal Statistics.", region: "Europe", country: "Russia", language: "Russian/English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://rosstat.gov.ru/", vars: "GDP", papers: "Rosstat" },
+            { name: "SBA Loans", desc: "Small Business Admin loan data.", region: "North America", country: "USA", language: "English", unit: "Loan", structure: "Cross-Sectional", frequency: "Varies", courses: ["Public Econ", "Finance"], url: "https://data.sba.gov/", vars: "Loan amount", papers: "Finance papers" },
+            { name: "SCF", desc: "Survey of Consumer Finances.", region: "North America", country: "USA", language: "English", unit: "Household", structure: "Repeated Cross-Section", frequency: "Triennial", courses: ["Finance", "Public Econ"], url: "https://www.federalreserve.gov/econres/scfindex.htm", vars: "Wealth, Debt, Assets", papers: "Piketty & Saez (2003)" },
+            { name: "Scopus", desc: "Bibliometric Data.", region: "Global", country: "Global", language: "English", unit: "Article", structure: "Network", frequency: "Daily", courses: ["IO"], url: "https://www.scopus.com/", vars: "Citations", papers: "Azoulay (2010)" },
+            { name: "SEC EDGAR", desc: "Corporate filings (10-K).", region: "North America", country: "USA", language: "English", unit: "Firm", structure: "Text", frequency: "Varies", courses: ["Finance", "Accounting"], url: "https://www.sec.gov/edgar", vars: "Filings text", papers: "Text Analysis" },
+            { name: "SEDLAC", desc: "LatAm Socio-Econ Database.", region: "Latin America", country: "Various", language: "Spanish", unit: "Household", structure: "Harmonized", frequency: "Annual", courses: ["Development"], url: "https://www.cedlas.econo.unlp.edu.ar/", vars: "Inequality", papers: "SEDLAC" },
+            { name: "SHARE", desc: "Survey of Health, Ageing and Retirement in Europe.", region: "Europe", country: "EU", language: "English", unit: "Individual", structure: "Panel", frequency: "Biennial", courses: ["Health Econ"], url: "http://www.share-project.org/", vars: "Health", papers: "SHARE" },
+            { name: "Shiller Data", desc: "Long Term Stock/Housing.", region: "North America", country: "USA", language: "English", unit: "Time Series", structure: "Time Series", frequency: "Monthly", courses: ["Finance"], url: "http://www.econ.yale.edu/~shiller/", vars: "CAPE", papers: "Shiller" },
+            { name: "SIPP", desc: "Survey of Income and Program Participation.", region: "North America", country: "USA", language: "English", unit: "Individual", structure: "Panel", frequency: "Monthly", courses: ["Public Econ", "Labor Econ"], url: "https://www.census.gov/programs-surveys/sipp.html", vars: "Welfare use, Assets", papers: "Meyer et al. (2015)" },
+            { name: "SOI Tax Stats", desc: "Statistics of Income (IRS).", region: "North America", country: "USA", language: "English", unit: "Aggregates", structure: "Repeated Cross-Section", frequency: "Annual", courses: ["Public Econ"], url: "https://www.irs.gov/statistics/soi-tax-stats-home-page", vars: "Tax data", papers: "Public Finance" },
+            { name: "SSA Data", desc: "Social Security Administration.", region: "North America", country: "USA", language: "English", unit: "Various", structure: "Time Series", frequency: "Annual", courses: ["Public Econ"], url: "https://www.ssa.gov/data/", vars: "Benefits", papers: "Retirement" },
+            { name: "STATbel", desc: "Belgium Statistics.", region: "Europe", country: "Belgium", language: "French", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://statbel.fgov.be/", vars: "CPI", papers: "STATbel" },
+            { name: "Stats Ireland", desc: "CSO Ireland.", region: "Europe", country: "Ireland", language: "English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Macroeconomics"], url: "https://www.cso.ie/", vars: "GDP", papers: "CSO" },
+            { name: "Stats NZ", desc: "Stats New Zealand.", region: "Oceania", country: "New Zealand", language: "English", unit: "National", structure: "Time Series", frequency: "Quarterly", courses: ["Macroeconomics"], url: "https://www.stats.govt.nz/", vars: "GDP", papers: "Stats NZ" },
+            { name: "Stats SA", desc: "Statistics South Africa.", region: "Africa", country: "South Africa", language: "English", unit: "National", structure: "Time Series", frequency: "Monthly", courses: ["Development"], url: "http://www.statssa.gov.za/", vars: "CPI", papers: "Stats SA" },
+            { name: "TRAC", desc: "Transactional Records Access Clearinghouse.", region: "North America", country: "USA", language: "English", unit: "Various", structure: "Admin Records", frequency: "Varies", courses: ["Law & Econ"], url: "https://trac.syr.edu/", vars: "Immigration, FBI", papers: "Law & Econ" },
+            { name: "UCDP", desc: "Armed Conflict Data.", region: "Global", country: "Global", language: "English", unit: "Conflict", structure: "Panel", frequency: "Annual", courses: ["Political Econ"], url: "https://ucdp.uu.se/", vars: "Deaths", papers: "Conflict" },
+            { name: "UCR (FBI)", desc: "Uniform Crime Reporting.", region: "North America", country: "USA", language: "English", unit: "Agency", structure: "Panel", frequency: "Annual", courses: ["Law & Econ"], url: "https://www.fbi.gov/services/cjis/ucr", vars: "Arrests, Crimes", papers: "Levitt (1996)" },
+            { name: "UKCPR Welfare Data", desc: "University of Kentucky Center for Poverty Research.", region: "North America", country: "USA", language: "English", unit: "State", structure: "Panel", frequency: "Annual", courses: ["Public Econ", "Labor Econ"], url: "https://ukcpr.uky.edu/data", vars: "AFDC/TANF, Poverty", papers: "Ziliak (2016)" },
+            { name: "UN Comtrade", desc: "Global Trade Data.", region: "Global", country: "Global", language: "English", unit: "Country-Pair", structure: "Panel", frequency: "Annual", courses: ["Trade"], url: "https://comtrade.un.org/", vars: "Exports", papers: "Melitz" },
+            { name: "Understanding Society", desc: "UK Household Panel.", region: "Europe", country: "UK", language: "English", unit: "Household", structure: "Panel", frequency: "Annual", courses: ["Labor Econ"], url: "https://www.understandingsociety.ac.uk/", vars: "Wellbeing", papers: "UKHLS" },
+            { name: "UNSD", desc: "UN Statistical Division.", region: "Global", country: "Global", language: "English", unit: "Country", structure: "Panel", frequency: "Annual", courses: ["Development"], url: "https://unstats.un.org/", vars: "SDG Indicators", papers: "UN Reports" },
+            { name: "USASpending", desc: "Federal contract/grant spending.", region: "North America", country: "USA", language: "English", unit: "Contract", structure: "Admin Records", frequency: "Daily", courses: ["Public Econ"], url: "https://www.usaspending.gov/", vars: "Recipient, Amount", papers: "Public Finance" },
+            { name: "WID", desc: "World Inequality Database.", region: "Global", country: "Global", language: "English", unit: "Country", structure: "Panel", frequency: "Annual", courses: ["Public Econ"], url: "https://wid.world/", vars: "Top 1%", papers: "Piketty" },
+            { name: "World Bank WDI", desc: "World Development Indicators.", region: "Global", country: "Global", language: "English", unit: "Country", structure: "Panel", frequency: "Annual", courses: ["Development"], url: "https://data.worldbank.org/", vars: "Poverty, GDP", papers: "Acemoglu" },
+            { name: "Zillow Research", desc: "Housing market metrics.", region: "North America", country: "USA", language: "English", unit: "Zip Code", structure: "Panel", frequency: "Monthly", courses: ["Urban Econ"], url: "https://www.zillow.com/research/data/", vars: "ZHVI, Rents", papers: "Housing Macro" }
+        ];
+
+        // Sort data alphabetically by name immediately
+        rawData.sort((a, b) => a.name.localeCompare(b.name));
+
         // State Management
-        let rawData = [];
-        let state = { search: "", region: "All", country: "All", structure: "All", field: "All", frequency: "All" };
+        let currentData = [...rawData];
+        const state = { search: "", region: "All", country: "All", structure: "All", field: "All", frequency: "All", viewMode: "grid" };
 
+        // DOM Handles
         const contentArea = document.getElementById('content-area');
+        const tableBody = document.getElementById('table-body');
+        const tableContainer = document.getElementById('table-container');
+        const searchInput = document.getElementById('search-input');
+        const regionFilter = document.getElementById('region-filter');
+        const countryFilter = document.getElementById('country-filter');
+        const fieldFilter = document.getElementById('field-filter');
+        const structureFilter = document.getElementById('structure-filter');
+        const frequencyFilter = document.getElementById('frequency-filter');
+        const visibleCount = document.getElementById('visible-count');
+        const resetBtn = document.getElementById('reset-filters');
+        const viewModeBtns = document.querySelectorAll('.view-btn');
+        const toggleViewBtn = document.getElementById('view-mode-toggle');
+        const modal = document.getElementById('detail-modal');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const themeToggleBtn = document.getElementById('theme-toggle');
 
-        async function init() {
-            try {
-                // Fetch the data file
-                const response = await fetch('datasets.json');
-                
-                if (!response.ok) {
-                    throw new Error("Could not find datasets.json");
-                }
-                
-                rawData = await response.json();
-                
-                // Success: Sort and Render
-                rawData.sort((a, b) => a.name.localeCompare(b.name));
-                populateCountryFilter();
-                render(rawData);
-                
-            } catch (err) {
-                console.error("Error loading data:", err);
-            }
+        // Dynamically populate Country Filter
+        function populateCountryFilter() {
+            const countries = new Set();
+            rawData.forEach(item => {
+                // Split multi-country entries if needed, or just take the main one
+                // For this list, 'country' is usually single string "USA", "Global", "India", etc.
+                // Or "South Africa"
+                countries.add(item.country); 
+            });
+            
+            const sortedCountries = Array.from(countries).sort();
+            
+            sortedCountries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                countryFilter.appendChild(option);
+            });
         }
 
-        function populateCountryFilter() {
-            const countrySelect = document.getElementById('country-filter');
-            const countries = [...new Set(rawData.map(item => item.country))].sort();
-            countries.forEach(country => {
-                const opt = document.createElement('option');
-                opt.value = opt.textContent = country;
-                countrySelect.appendChild(opt);
+        function render() {
+            contentArea.innerHTML = '';
+            tableBody.innerHTML = '';
+            currentData.forEach(item => {
+                // Grid Card
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 hover:shadow-md transition cursor-pointer group";
+                card.onclick = () => openModal(item);
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-2">
+                             <div class="w-2 h-8 bg-sage-500 rounded-full group-hover:bg-earth-500 transition"></div>
+                             <h4 class="font-bold text-stone-900 dark:text-stone-100 leading-tight group-hover:text-earth-600 dark:group-hover:text-earth-400 transition text-sm sm:text-base">${item.name}</h4>
+                        </div>
+                        <span class="text-[10px] uppercase font-bold text-stone-400 border border-stone-200 dark:border-stone-700 rounded px-1.5 py-0.5 whitespace-nowrap">${item.country.split(' ')[0]}</span>
+                    </div>
+                    <p class="text-xs text-stone-600 dark:text-stone-400 mb-4 line-clamp-2 h-8">${item.desc}</p>
+                    <div class="flex flex-col gap-1 mb-4">
+                        <div class="flex flex-wrap gap-2 text-[10px]">
+                            <span class="bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-2 py-1 rounded border border-stone-100 dark:border-stone-700">${item.courses[0]}</span>
+                             <span class="bg-stone-50 dark:bg-stone-900 text-stone-500 dark:text-stone-400 px-2 py-1 rounded border border-stone-100 dark:border-stone-700">${item.frequency}</span>
+                        </div>
+                        <div class="text-[10px] text-sage-600 dark:text-sage-400 font-medium italic mt-1">
+                             <i class="fa-solid fa-layer-group"></i> ${item.structure}
+                        </div>
+                    </div>
+                    <div class="border-t border-stone-100 dark:border-stone-800 pt-3 flex justify-between items-center">
+                        <span class="text-[10px] text-stone-400 font-mono">View Metadata</span>
+                        <span class="text-[10px] text-sage-600 dark:text-sage-400 font-bold group-hover:underline"><i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                `;
+                contentArea.appendChild(card);
+
+                const row = document.createElement('tr');
+                row.className = "hover:bg-stone-50 dark:hover:bg-stone-800 transition cursor-pointer";
+                row.onclick = () => openModal(item);
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900 dark:text-stone-100">${item.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs text-stone-500 dark:text-stone-400 font-mono">${item.structure} (${item.frequency})</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500 dark:text-stone-400">${item.region}/${item.country}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500 dark:text-stone-400">${item.language}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><a href="#" class="text-sage-600 dark:text-sage-400 hover:text-earth-600 dark:hover:text-earth-400">View</a></td>
+                `;
+                tableBody.appendChild(row);
             });
+            visibleCount.textContent = currentData.length;
         }
 
         function filterData() {
             const term = state.search.toLowerCase();
-            const filtered = rawData.filter(item => {
+            currentData = rawData.filter(item => {
                 const matchesSearch = item.name.toLowerCase().includes(term) || item.desc.toLowerCase().includes(term) || item.vars.toLowerCase().includes(term);
-                const matchesRegion = state.region === "All" || item.region === state.region;
-                const matchesCountry = state.country === "All" || item.country === state.country;
-                const matchesStructure = state.structure === "All" || item.structure.includes(state.structure);
-                const matchesFrequency = state.frequency === "All" || item.frequency.includes(state.frequency);
-                const matchesField = state.field === "All" || item.courses.some(c => c.includes(state.field));
+                const matchesRegion = state.region === "All" ? true : item.region === state.region;
+                const matchesCountry = state.country === "All" ? true : item.country === state.country; // Exact match for simplicity
+                const matchesStructure = state.structure === "All" ? true : item.structure.includes(state.structure);
+                const matchesFrequency = state.frequency === "All" ? true : item.frequency.includes(state.frequency);
+                const matchesField = state.field === "All" ? true : item.courses.some(c => c.includes(state.field));
+                
                 return matchesSearch && matchesRegion && matchesCountry && matchesStructure && matchesFrequency && matchesField;
             });
-            render(filtered);
-        }
-
-        function render(data) {
-            contentArea.innerHTML = '';
-            document.getElementById('visible-count').textContent = data.length;
-
-            if (data.length === 0) {
-                contentArea.innerHTML = `<p class="col-span-full text-center py-10 text-stone-400">No matching data sources found.</p>`;
-                return;
-            }
-
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 hover:shadow-md transition cursor-pointer flex flex-col justify-between";
-                card.onclick = () => openModal(item);
-                
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold text-stone-900 dark:text-stone-100 leading-tight">${item.name}</h4>
-                            <span class="text-[10px] uppercase font-bold text-stone-400 border border-stone-200 dark:border-stone-700 rounded px-1.5 py-0.5 whitespace-nowrap">${item.country}</span>
-                        </div>
-                        <p class="text-xs text-stone-600 dark:text-stone-400 mb-4 line-clamp-2">${item.desc}</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 text-[10px] mt-auto">
-                        <span class="bg-sage-100 dark:bg-sage-900 text-sage-800 dark:text-sage-200 px-2 py-1 rounded font-medium">${item.structure}</span>
-                        <span class="bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-2 py-1 rounded">${item.frequency}</span>
-                    </div>
-                `;
-                contentArea.appendChild(card);
-            });
+            render();
         }
 
         function openModal(item) {
             document.getElementById('modal-title').textContent = item.name;
             document.getElementById('modal-desc').textContent = item.desc;
             document.getElementById('modal-vars').textContent = item.vars;
-            document.getElementById('modal-papers').textContent = "Suggested citation: " + (item.papers || "See source metadata.");
+            document.getElementById('modal-lang').textContent = item.language;
+            document.getElementById('modal-freq').textContent = item.frequency;
+            document.getElementById('modal-papers').textContent = item.papers || "Standard Citation Metadata Available at Source.";
             document.getElementById('modal-link').href = item.url;
             
             const badgesDiv = document.getElementById('modal-badges');
-            badgesDiv.innerHTML = `
-                <span class="bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs px-2 py-1 rounded">${item.region}</span>
-                <span class="bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs px-2 py-1 rounded">${item.language}</span>
-            `;
+            badgesDiv.innerHTML = `<span class="bg-sage-100 dark:bg-sage-900 text-sage-800 dark:text-sage-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.unit}</span>
+                                   <span class="bg-earth-100 dark:bg-stone-800 text-earth-800 dark:text-earth-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.structure}</span>
+                                   <span class="bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.region}</span>`;
             
-            document.getElementById('detail-modal').classList.remove('hidden');
+            const fieldsDiv = document.getElementById('modal-fields');
+            fieldsDiv.innerHTML = item.courses.map(c => `<span class="bg-white dark:bg-stone-800 border border-sage-200 dark:border-sage-800 text-sage-700 dark:text-sage-300 text-xs px-2 py-1 rounded shadow-sm">${c}</span>`).join('');
+            modal.classList.remove('hidden');
         }
+
+        function closeModal() { modal.classList.add('hidden'); }
 
         // Dark Mode Logic
-        const themeBtn = document.getElementById('theme-toggle');
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
-        themeBtn.onclick = () => {
-            document.documentElement.classList.toggle('dark');
-            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-        };
 
-        // Event Listeners
-        document.getElementById('modal-close-btn').onclick = () => document.getElementById('detail-modal').classList.add('hidden');
-        document.getElementById('modal-backdrop').onclick = () => document.getElementById('detail-modal').classList.add('hidden');
-        document.getElementById('reset-filters').onclick = () => {
-            state = { search: "", region: "All", country: "All", structure: "All", field: "All", frequency: "All" };
-            document.querySelectorAll('select').forEach(s => s.value = "All");
-            document.getElementById('search-input').value = "";
-            filterData();
-        };
-
-        ['search-input', 'region-filter', 'country-filter', 'structure-filter', 'field-filter', 'frequency-filter'].forEach(id => {
-            const el = document.getElementById(id);
-            const key = id.replace('-filter', '').replace('-input', '');
-            if(id.includes('input')) el.oninput = (e) => { state.search = e.target.value; filterData(); };
-            else el.onchange = (e) => { state[key] = e.target.value; filterData(); };
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
         });
 
-        // Initialize
-        init();
+        // Event Listeners
+        searchInput.addEventListener('input', (e) => { state.search = e.target.value; filterData(); });
+        regionFilter.addEventListener('change', (e) => { state.region = e.target.value; filterData(); });
+        countryFilter.addEventListener('change', (e) => { state.country = e.target.value; filterData(); });
+        fieldFilter.addEventListener('change', (e) => { state.field = e.target.value; filterData(); });
+        structureFilter.addEventListener('change', (e) => { state.structure = e.target.value; filterData(); });
+        frequencyFilter.addEventListener('change', (e) => { state.frequency = e.target.value; filterData(); });
+        
+        resetBtn.addEventListener('click', () => {
+            state.search = ""; 
+            state.region = "All"; 
+            state.country = "All";
+            state.structure = "All"; 
+            state.field = "All"; 
+            state.frequency = "All";
+            
+            searchInput.value = ""; 
+            regionFilter.value = "All"; 
+            countryFilter.value = "All";
+            structureFilter.value = "All"; 
+            fieldFilter.value = "All"; 
+            frequencyFilter.value = "All";
+            
+            filterData();
+        });
+
+        viewModeBtns.forEach(btn => btn.addEventListener('click', () => {
+            state.viewMode = btn.dataset.mode;
+            viewModeBtns.forEach(b => b.classList.toggle('active', b === btn));
+            contentArea.classList.toggle('hidden', state.viewMode === 'table');
+            tableContainer.classList.toggle('hidden', state.viewMode === 'grid');
+        }));
+
+        toggleViewBtn.addEventListener('click', () => {
+            const nextMode = state.viewMode === 'grid' ? 'table' : 'grid';
+            state.viewMode = nextMode;
+            contentArea.classList.toggle('hidden', state.viewMode === 'table');
+            tableContainer.classList.toggle('hidden', state.viewMode === 'grid');
+        });
+
+        modalCloseBtn.onclick = closeModal;
+        modalBackdrop.onclick = closeModal;
+
+        // Init
+        populateCountryFilter();
+        render();
+
     </script>
 </body>
 </html>
