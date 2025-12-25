@@ -120,7 +120,7 @@
         async function fetchLastUpdated() {
             try {
                 // Adjust Repo name if different
-                const res = await fetch('https://api.github.com/repos/shatilanaholy/shatilanaholy.github.io/commits?path=datasets.json&per_page=1');
+                const res = await fetch('https://api.github.com/repos/shatilanaholy/econdatahub/commits?path=datasets.json&per_page=1');
                 const data = await res.json();
                 const date = new Date(data[0].commit.committer.date).toLocaleDateString();
                 document.getElementById('last-updated').textContent = `Database last updated: ${date}`;
@@ -183,4 +183,5 @@
         init();
     </script>
 </body>
+
 </html>
