@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Public Use Data Resources for Economics</title>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Theme Configuration -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -24,10 +30,8 @@
             }
         }
     </script>
-
     <style>
         body { transition: background-color 0.3s ease, color 0.3s ease; }
-        .prose p { margin-bottom: 1rem; line-height: 1.75; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
         .dark ::-webkit-scrollbar-thumb { background: #57534e; }
@@ -35,6 +39,7 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col bg-stone-50 text-stone-900 dark:bg-black dark:text-stone-200">
 
+    <!-- Header -->
     <header class="bg-white border-b border-stone-200 sticky top-0 z-40 shadow-sm dark:bg-black dark:border-stone-800 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -46,29 +51,30 @@
                     <i class="fa-solid fa-moon dark:hidden"></i>
                     <i class="fa-solid fa-sun hidden dark:block"></i>
                 </button>
-                 <button id="view-mode-toggle" class="p-2 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white transition">
-                    <i class="fa-solid fa-table-list text-lg"></i>
-                </button>
             </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="flex-grow">
         <section id="motivation" class="max-w-4xl mx-auto px-4 py-12">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-serif font-bold text-stone-900 dark:text-white mb-4">Public Use Data Resources for Economics</h2>
                 <div class="w-24 h-1 bg-earth-500 mx-auto rounded-full"></div>
-                <p id="last-updated" class="text-xs text-stone-400 mt-4 italic">Loading repository history...</p>
             </div>
-            <div class="prose prose-stone mx-auto text-lg text-stone-700 dark:text-stone-300">
-                <p>EconDataHub catalogs public-use data sources across major economic fields. This tool allows researchers to filter high-quality longitudinal surveys and official censuses.</p>
+            <div class="prose prose-stone mx-auto text-lg text-stone-700 dark:text-stone-300 text-center">
+                <p>A curated catalog of public-use microeconomic, macroeconomic, and financial datasets.</p>
             </div>
         </section>
 
         <section id="repository" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <!-- Filter Bar -->
             <div class="bg-white dark:bg-stone-900 p-6 rounded-xl shadow-lg border border-stone-200 dark:border-stone-800 mb-8 -mt-12 relative z-10">
                 <div class="flex flex-col gap-4">
-                    <input type="text" id="search-input" placeholder="Search by name, country, or variables..." class="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-sage-500 outline-none dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-stone-400"></i>
+                        <input type="text" id="search-input" placeholder="Search by name, country, or variables..." class="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-sage-500 outline-none dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                    </div>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                         <select id="region-filter" class="w-full px-3 py-2 bg-stone-50 border rounded-lg text-sm dark:bg-stone-950 dark:text-white"><option value="All">All Regions</option><option value="North America">North America</option><option value="Europe">Europe</option><option value="Asia">Asia</option><option value="Africa">Africa</option><option value="Latin America">Latin America</option><option value="Oceania">Oceania</option><option value="Global">Global</option></select>
                         <select id="country-filter" class="w-full px-3 py-2 bg-stone-50 border rounded-lg text-sm dark:bg-stone-950 dark:text-white"><option value="All">All Countries</option></select>
@@ -80,108 +86,172 @@
                 </div>
             </div>
 
+            <!-- Content Area -->
             <div class="flex justify-between items-center mb-6">
                 <p class="text-stone-500 text-sm">Showing <span id="visible-count" class="font-bold text-stone-900 dark:text-white">0</span> sources</p>
-                <div class="flex gap-2"><button class="view-btn active" data-mode="grid">Grid</button><button class="view-btn" data-mode="table">Table</button></div>
             </div>
-
-            <div id="content-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <div id="table-container" class="hidden overflow-x-auto bg-white dark:bg-stone-900 rounded-xl border">
-                <table class="min-w-full divide-y divide-stone-200 dark:divide-stone-800">
-                    <thead class="bg-stone-50 dark:bg-stone-950"><tr><th class="px-6 py-3 text-left text-xs text-stone-500 uppercase">Source</th><th class="px-6 py-3 text-left text-xs text-stone-500 uppercase">Structure</th><th class="px-6 py-3 text-left text-xs text-stone-500 uppercase">Region</th><th class="px-6 py-3 text-left text-xs text-stone-500 uppercase">Language</th><th class="px-6 py-3 text-left text-xs text-stone-500 uppercase">Action</th></tr></thead>
-                    <tbody id="table-body" class="divide-y"></tbody>
-                </table>
+            
+            <div id="content-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Data cards will appear here -->
             </div>
         </section>
     </main>
 
     <footer class="bg-stone-900 text-stone-400 py-12 text-center">
         <h5 class="text-white font-serif font-bold mb-4">About EconDataHub</h5>
-        <p class="text-sm italic">Created by Shatil Anaholy. &copy; 2025. Educational Use Only.</p>
+        <p class="text-sm italic">Created by Shatil Anaholy. &copy; 2025.</p>
     </footer>
 
-    <div id="detail-modal" class="fixed inset-0 z-50 hidden overflow-y-auto"><div class="flex items-center justify-center min-h-screen"><div class="fixed inset-0 bg-stone-900 bg-opacity-75" id="modal-backdrop"></div><div class="bg-white dark:bg-stone-900 rounded-lg p-6 max-w-2xl w-full z-10"><h3 id="modal-title" class="text-xl font-bold mb-4"></h3><p id="modal-desc" class="mb-4"></p><p id="modal-vars" class="font-mono bg-stone-100 p-2 text-sm dark:bg-stone-800 mb-6"></p><div class="flex justify-between"><a id="modal-link" target="_blank" class="bg-sage-600 text-white px-4 py-2 rounded">Visit Source</a><button id="modal-close-btn" class="border px-4 py-2 rounded">Close</button></div></div></div></div>
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-stone-900 bg-opacity-75" id="modal-backdrop"></div>
+            <div class="bg-white dark:bg-stone-900 rounded-lg p-6 max-w-2xl w-full z-10 shadow-xl border border-stone-200 dark:border-stone-800 relative">
+                <h3 id="modal-title" class="text-xl font-bold mb-2 text-stone-900 dark:text-white"></h3>
+                <div class="flex gap-2 mb-4" id="modal-badges"></div>
+                <p id="modal-desc" class="mb-4 text-stone-600 dark:text-stone-300"></p>
+                <div class="bg-stone-100 dark:bg-stone-800 p-3 rounded mb-4">
+                    <p class="text-xs uppercase font-bold text-stone-500 mb-1">Key Variables</p>
+                    <p id="modal-vars" class="font-mono text-sm text-stone-800 dark:text-stone-200"></p>
+                </div>
+                <p class="text-xs text-stone-500 mb-6 italic" id="modal-papers"></p>
+                <div class="flex justify-end gap-3">
+                    <button id="modal-close-btn" class="px-4 py-2 border rounded text-stone-600 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-800 dark:border-stone-700">Close</button>
+                    <a id="modal-link" href="#" target="_blank" class="px-4 py-2 bg-sage-600 text-white rounded hover:bg-sage-700">Visit Source</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Application Logic -->
     <script>
+        // State Management
         let rawData = [];
-        const state = { search: "", region: "All", country: "All", structure: "All", field: "All", frequency: "All", viewMode: "grid" };
+        let state = { search: "", region: "All", country: "All", structure: "All", field: "All", frequency: "All" };
+
+        const contentArea = document.getElementById('content-area');
 
         async function init() {
             try {
-                const response = await fetch('./datasets.json');
+                // Fetch the data file
+                const response = await fetch('datasets.json');
+                
+                if (!response.ok) {
+                    throw new Error("Could not find datasets.json");
+                }
+                
                 rawData = await response.json();
+                
+                // Success: Sort and Render
                 rawData.sort((a, b) => a.name.localeCompare(b.name));
                 populateCountryFilter();
-                filterData();
-                fetchLastUpdated();
-            } catch (err) { console.error("Load failed", err); }
-        }
-
-        async function fetchLastUpdated() {
-            try {
-                // Adjust Repo name if different
-                const res = await fetch('https://api.github.com/repos/shatilanaholy/econdatahub/commits?path=datasets.json&per_page=1');
-                const data = await res.json();
-                const date = new Date(data[0].commit.committer.date).toLocaleDateString();
-                document.getElementById('last-updated').textContent = `Database last updated: ${date}`;
-            } catch (e) { document.getElementById('last-updated').textContent = ""; }
+                render(rawData);
+                
+            } catch (err) {
+                console.error("Error loading data:", err);
+            }
         }
 
         function populateCountryFilter() {
-            const countries = [...new Set(rawData.map(d => d.country))].sort();
-            const filter = document.getElementById('country-filter');
-            countries.forEach(c => {
+            const countrySelect = document.getElementById('country-filter');
+            const countries = [...new Set(rawData.map(item => item.country))].sort();
+            countries.forEach(country => {
                 const opt = document.createElement('option');
-                opt.value = opt.textContent = c;
-                filter.appendChild(opt);
+                opt.value = opt.textContent = country;
+                countrySelect.appendChild(opt);
             });
         }
 
         function filterData() {
             const term = state.search.toLowerCase();
-            const filtered = rawData.filter(d => 
-                (d.name.toLowerCase().includes(term) || d.desc.toLowerCase().includes(term)) &&
-                (state.region === "All" || d.region === state.region) &&
-                (state.country === "All" || d.country === state.country) &&
-                (state.structure === "All" || d.structure.includes(state.structure)) &&
-                (state.field === "All" || d.courses.some(c => c.includes(state.field)))
-            );
+            const filtered = rawData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(term) || item.desc.toLowerCase().includes(term) || item.vars.toLowerCase().includes(term);
+                const matchesRegion = state.region === "All" || item.region === state.region;
+                const matchesCountry = state.country === "All" || item.country === state.country;
+                const matchesStructure = state.structure === "All" || item.structure.includes(state.structure);
+                const matchesFrequency = state.frequency === "All" || item.frequency.includes(state.frequency);
+                const matchesField = state.field === "All" || item.courses.some(c => c.includes(state.field));
+                return matchesSearch && matchesRegion && matchesCountry && matchesStructure && matchesFrequency && matchesField;
+            });
             render(filtered);
         }
 
         function render(data) {
-            const area = document.getElementById('content-area');
-            const body = document.getElementById('table-body');
-            area.innerHTML = ''; body.innerHTML = '';
+            contentArea.innerHTML = '';
+            document.getElementById('visible-count').textContent = data.length;
+
+            if (data.length === 0) {
+                contentArea.innerHTML = `<p class="col-span-full text-center py-10 text-stone-400">No matching data sources found.</p>`;
+                return;
+            }
+
             data.forEach(item => {
                 const card = document.createElement('div');
-                card.className = "bg-white dark:bg-stone-900 border p-6 rounded-xl cursor-pointer hover:shadow-md";
+                card.className = "bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 hover:shadow-md transition cursor-pointer flex flex-col justify-between";
                 card.onclick = () => openModal(item);
-                card.innerHTML = `<h4 class="font-bold mb-2">${item.name}</h4><p class="text-xs text-stone-500">${item.desc}</p>`;
-                area.appendChild(card);
-
-                const row = body.insertRow();
-                row.onclick = () => openModal(item);
-                row.innerHTML = `<td class="px-6 py-4">${item.name}</td><td class="px-6 py-4">${item.structure}</td><td class="px-6 py-4">${item.region}</td><td class="px-6 py-4">${item.language}</td><td class="px-6 py-4 text-sage-600">View</td>`;
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-stone-900 dark:text-stone-100 leading-tight">${item.name}</h4>
+                            <span class="text-[10px] uppercase font-bold text-stone-400 border border-stone-200 dark:border-stone-700 rounded px-1.5 py-0.5 whitespace-nowrap">${item.country}</span>
+                        </div>
+                        <p class="text-xs text-stone-600 dark:text-stone-400 mb-4 line-clamp-2">${item.desc}</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-[10px] mt-auto">
+                        <span class="bg-sage-100 dark:bg-sage-900 text-sage-800 dark:text-sage-200 px-2 py-1 rounded font-medium">${item.structure}</span>
+                        <span class="bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-2 py-1 rounded">${item.frequency}</span>
+                    </div>
+                `;
+                contentArea.appendChild(card);
             });
-            document.getElementById('visible-count').textContent = data.length;
         }
 
         function openModal(item) {
             document.getElementById('modal-title').textContent = item.name;
             document.getElementById('modal-desc').textContent = item.desc;
-            document.getElementById('modal-vars').textContent = `Variables: ${item.vars}`;
+            document.getElementById('modal-vars').textContent = item.vars;
+            document.getElementById('modal-papers').textContent = "Suggested citation: " + (item.papers || "See source metadata.");
             document.getElementById('modal-link').href = item.url;
+            
+            const badgesDiv = document.getElementById('modal-badges');
+            badgesDiv.innerHTML = `
+                <span class="bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs px-2 py-1 rounded">${item.region}</span>
+                <span class="bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs px-2 py-1 rounded">${item.language}</span>
+            `;
+            
             document.getElementById('detail-modal').classList.remove('hidden');
         }
 
+        // Dark Mode Logic
+        const themeBtn = document.getElementById('theme-toggle');
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        themeBtn.onclick = () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        };
+
+        // Event Listeners
         document.getElementById('modal-close-btn').onclick = () => document.getElementById('detail-modal').classList.add('hidden');
-        document.getElementById('search-input').oninput = (e) => { state.search = e.target.value; filterData(); };
-        document.getElementById('region-filter').onchange = (e) => { state.region = e.target.value; filterData(); };
-        document.getElementById('country-filter').onchange = (e) => { state.country = e.target.value; filterData(); };
-        
+        document.getElementById('modal-backdrop').onclick = () => document.getElementById('detail-modal').classList.add('hidden');
+        document.getElementById('reset-filters').onclick = () => {
+            state = { search: "", region: "All", country: "All", structure: "All", field: "All", frequency: "All" };
+            document.querySelectorAll('select').forEach(s => s.value = "All");
+            document.getElementById('search-input').value = "";
+            filterData();
+        };
+
+        ['search-input', 'region-filter', 'country-filter', 'structure-filter', 'field-filter', 'frequency-filter'].forEach(id => {
+            const el = document.getElementById(id);
+            const key = id.replace('-filter', '').replace('-input', '');
+            if(id.includes('input')) el.oninput = (e) => { state.search = e.target.value; filterData(); };
+            else el.onchange = (e) => { state[key] = e.target.value; filterData(); };
+        });
+
+        // Initialize
         init();
     </script>
 </body>
-
 </html>
