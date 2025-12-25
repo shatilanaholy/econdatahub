@@ -70,7 +70,6 @@
     <!-- Main Content -->
     <main class="flex-grow">
         
-        <!-- Motivation Section -->
         <section id="motivation" class="max-w-4xl mx-auto px-4 py-12 sm:py-16">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-serif font-bold text-stone-900 dark:text-white mb-4">Public Use Data Resources for Economics</h2>
@@ -78,10 +77,7 @@
             </div>
             <div class="prose prose-stone mx-auto text-lg text-stone-700 dark:text-stone-300">
                 <p>
-                    EconDataHub catalogs over <strong>100 distinct public-use data sources</strong> spanning microeconomics, macroeconomics, finance, and development. This repository prioritizes high-quality, specific datasets over generic portals.
-                </p>
-                <p>
-                    <strong>Navigation:</strong> Use the <strong>Search</strong> bar or dropdown filters to explore the repository. Toggle between Grid and Table views using the icon in the header.
+                    EconDataHub catalogs over <strong>145 distinct public-use data sources</strong>. Datasets are organized by <strong>Difficulty Level</strong> and mapped to <strong>Course Relevance</strong>, allowing students and researchers to quickly identify relevant data for specific sub-fields.
                 </p>
             </div>
         </section>
@@ -96,12 +92,12 @@
                         <label class="block text-xs font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Search Repository</label>
                         <div class="relative">
                             <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-stone-400"></i>
-                            <input type="text" id="search-input" placeholder="Search by name, country, topic, or variables..." 
+                            <input type="text" id="search-input" placeholder="Search by name, variable, or topic..." 
                                 class="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-sage-500 outline-none transition dark:bg-stone-950 dark:border-stone-800 dark:text-white dark:placeholder-stone-600">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
                         <div>
                             <label class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Region</label>
                             <select id="region-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
@@ -112,7 +108,7 @@
                                 <option value="Africa">Africa</option>
                                 <option value="Latin America">Latin America</option>
                                 <option value="Oceania">Oceania</option>
-                                <option value="Global">Global/International</option>
+                                <option value="Global">Global</option>
                             </select>
                         </div>
 
@@ -123,21 +119,32 @@
                             </select>
                         </div>
 
-                         <div>
-                            <label class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Field</label>
-                            <select id="field-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
-                                <option value="All">All Fields</option>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Difficulty Level</label>
+                            <select id="tier-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                                <option value="All">All Levels</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-stone-500 dark:text-stone-400 mb-1">Course Relevance</label>
+                            <select id="curriculum-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
+                                <option value="All">All Courses</option>
+                                <option value="Labor">Labor</option>
+                                <option value="Energy">Energy</option>
+                                <option value="Trade">Trade</option>
+                                <option value="IO">Industrial Org (IO)</option>
+                                <option value="Environmental">Environmental</option>
+                                <option value="Game Theory">Game Theory</option>
+                                <option value="Public">Public Econ</option>
                                 <option value="Development">Development</option>
-                                <option value="Education Econ">Education</option>
                                 <option value="Finance">Finance</option>
-                                <option value="Health Econ">Health</option>
-                                <option value="Labor Econ">Labor Econ</option>
+                                <option value="Econometrics">Econometrics</option>
                                 <option value="Macroeconomics">Macroeconomics</option>
                                 <option value="Microeconomics">Microeconomics</option>
-                                <option value="Political Econ">Political Econ</option>
-                                <option value="Public Econ">Public Econ</option>
-                                <option value="Trade">Trade</option>
-                                <option value="Urban Econ">Urban Econ</option>
                             </select>
                         </div>
 
@@ -146,8 +153,9 @@
                             <select id="structure-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
                                 <option value="All">All Structures</option>
                                 <option value="Cross-Sectional">Cross-Sectional</option>
-                                <option value="Panel">Panel (Longitudinal)</option>
+                                <option value="Panel">Panel</option>
                                 <option value="Time Series">Time Series</option>
+                                <option value="Admin Records">Admin Records</option>
                             </select>
                         </div>
 
@@ -156,22 +164,22 @@
                             <select id="frequency-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
                                 <option value="All">All Frequencies</option>
                                 <option value="Annual">Annual</option>
-                                <option value="Quarterly">Quarterly</option>
                                 <option value="Monthly">Monthly</option>
-                                <option value="Daily">Daily/High-Freq</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Daily">Daily</option>
                             </select>
                         </div>
 
                         <div class="flex items-end pb-1">
-                            <button id="reset-filters" class="w-full text-center text-stone-400 hover:text-earth-600 dark:hover:text-earth-500 text-sm font-medium underline py-2">Reset Filters</button>
+                            <button id="reset-filters" class="w-full text-center text-stone-400 hover:text-earth-600 dark:hover:text-earth-500 text-sm font-medium underline py-2">Reset</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Count -->
-            <div class="flex justify-between items-center mb-6">
-                <p class="text-stone-500 dark:text-stone-400 text-sm">Showing <span id="visible-count" class="font-bold text-stone-900 dark:text-white">0</span> economic data sources</p>
+            <!-- Result Count -->
+            <div class="mb-6 flex justify-between items-center">
+                <p class="text-stone-500 dark:text-stone-400 text-sm">Showing <span id="visible-count" class="font-bold text-stone-900 dark:text-white">0</span> sources</p>
                 <div class="flex gap-2">
                    <button class="view-btn active text-stone-400 hover:text-stone-800 dark:hover:text-white" data-mode="grid"><i class="fa-solid fa-grid-2"></i> Grid</button>
                    <button class="view-btn text-stone-400 hover:text-stone-800 dark:hover:text-white" data-mode="table"><i class="fa-solid fa-list"></i> Table</button>
@@ -181,17 +189,16 @@
             <!-- Content Area -->
             <div id="content-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             
-            <!-- Table View -->
             <div id="table-container" class="hidden bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden transition-colors duration-300">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-stone-200 dark:divide-stone-800">
                         <thead class="bg-stone-50 dark:bg-stone-950">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Source</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Structure/Freq</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Region/Country</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Level / Relevance</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Region</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Language</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Action</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody id="table-body" class="bg-white dark:bg-stone-900 divide-y divide-stone-200 dark:divide-stone-800"></tbody>
@@ -207,14 +214,12 @@
     <footer class="bg-stone-900 dark:bg-black border-t border-transparent dark:border-stone-800 text-stone-400 py-12 transition-colors duration-300">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h5 class="text-white font-serif font-bold mb-4">About EconDataHub</h5>
-            <p class="text-sm leading-relaxed mb-6">
-                Created by Shatil Anaholy.
-            </p>
+            <p class="text-sm leading-relaxed mb-6">Created by Shatil Anaholy. Assistant Professor of Practice in Economics, UNL.</p>
             <p class="text-xs text-stone-600 dark:text-stone-500">&copy; 2025 Shatil Anaholy. For Educational Use.</p>
         </div>
     </footer>
 
-    <!-- Modal -->
+    <!-- Detail Modal -->
     <div id="detail-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-stone-900 bg-opacity-75 dark:bg-opacity-90 transition-opacity" aria-hidden="true" id="modal-backdrop"></div>
@@ -235,24 +240,28 @@
                             </div>
 
                             <div class="mt-4 bg-sage-50 dark:bg-stone-950 p-3 rounded-lg border border-sage-100 dark:border-stone-800">
-                                <h4 class="text-xs font-bold uppercase text-sage-600 dark:text-sage-400 mb-2">Economic Fields</h4>
+                                <h4 class="text-xs font-bold uppercase text-sage-600 dark:text-sage-400 mb-2">Course Relevance</h4>
                                 <div class="flex flex-wrap gap-2" id="modal-fields"></div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-4 mt-6 border-t border-stone-100 dark:border-stone-800 pt-4">
                                 <div>
-                                    <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Language</h4>
-                                    <p class="text-sm text-stone-800 dark:text-stone-200" id="modal-lang"></p>
+                                    <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Difficulty Level</h4>
+                                    <p class="text-sm text-stone-800 dark:text-stone-200 font-bold" id="modal-tier"></p>
                                 </div>
                                 <div>
-                                    <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Frequency</h4>
-                                    <p class="text-sm text-stone-800 dark:text-stone-200" id="modal-freq"></p>
+                                    <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Language</h4>
+                                    <p class="text-sm text-stone-800 dark:text-stone-200" id="modal-lang"></p>
                                 </div>
                             </div>
 
                             <div class="mt-4">
                                 <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Key Variables</h4>
                                 <p class="text-sm text-stone-800 dark:text-stone-300 font-mono bg-stone-50 dark:bg-stone-950 p-2 rounded" id="modal-vars"></p>
+                            </div>
+                            <div class="mt-4">
+                                <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Impact / Citation</h4>
+                                <p class="text-sm text-stone-600 dark:text-stone-400 italic" id="modal-papers"></p>
                             </div>
                         </div>
                     </div>
@@ -273,7 +282,7 @@
     <script>
         let rawData = [];
         let currentData = [];
-        const state = { search: "", region: "All", country: "All", structure: "All", field: "All", frequency: "All", viewMode: "grid" };
+        const state = { search: "", region: "All", country: "All", structure: "All", curriculum: "All", tier: "All", frequency: "All", viewMode: "grid" };
 
         const contentArea = document.getElementById('content-area');
         const tableBody = document.getElementById('table-body');
@@ -281,7 +290,8 @@
         const searchInput = document.getElementById('search-input');
         const regionFilter = document.getElementById('region-filter');
         const countryFilter = document.getElementById('country-filter');
-        const fieldFilter = document.getElementById('field-filter');
+        const tierFilter = document.getElementById('tier-filter');
+        const curriculumFilter = document.getElementById('curriculum-filter');
         const structureFilter = document.getElementById('structure-filter');
         const frequencyFilter = document.getElementById('frequency-filter');
         const visibleCount = document.getElementById('visible-count');
@@ -293,23 +303,19 @@
         const modalBackdrop = document.getElementById('modal-backdrop');
         const themeToggleBtn = document.getElementById('theme-toggle');
 
-        /**
-         * Loads the dataset from the external JSON file
-         */
         async function loadRepository() {
             try {
-                // This relative path works if index.html and data.json are in the same folder
                 const response = await fetch('data.json');
                 if (!response.ok) throw new Error('Could not load data.json');
-                
                 const data = await response.json();
+                
+                // Process and Alphabetize
                 rawData = data.sort((a, b) => a.name.localeCompare(b.name));
                 currentData = [...rawData];
                 
                 initUI();
             } catch (error) {
                 console.error('Error fetching data:', error);
-                contentArea.innerHTML = `<div class="col-span-full py-20 text-center"><p class="text-red-500 font-bold">Failed to load repository data.</p><p class="text-stone-500 text-sm mt-2">Ensure data.json is in the root directory.</p></div>`;
             }
         }
 
@@ -334,21 +340,31 @@
             tableBody.innerHTML = '';
             currentData.forEach(item => {
                 const card = document.createElement('div');
-                card.className = "bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 hover:shadow-md transition cursor-pointer group";
+                card.className = "bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 hover:shadow-md transition cursor-pointer group flex flex-col justify-between";
                 card.onclick = () => openModal(item);
+                
+                const tierClass = item.tier === "Beginner" ? "text-sage-600 bg-sage-50 dark:bg-sage-900/30" : 
+                                  item.tier === "Intermediate" ? "text-earth-600 bg-earth-50 dark:bg-earth-900/30" : 
+                                  "text-blue-600 bg-blue-50 dark:bg-blue-900/30";
+
                 card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="flex items-center gap-2">
-                             <div class="w-1.5 h-6 bg-sage-500 rounded-full group-hover:bg-earth-500 transition"></div>
-                             <h4 class="font-bold text-stone-900 dark:text-stone-100 leading-tight group-hover:text-earth-600 dark:group-hover:text-earth-400 transition text-sm">${item.name}</h4>
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-1.5 h-6 bg-sage-500 rounded-full group-hover:bg-earth-500 transition"></div>
+                                <h4 class="font-bold text-stone-900 dark:text-stone-100 leading-tight transition text-sm">${item.name}</h4>
+                            </div>
+                            <span class="text-[10px] uppercase font-bold text-stone-400 border border-stone-200 dark:border-stone-700 rounded px-1.5 py-0.5 whitespace-nowrap">${item.country.split(' ')[0]}</span>
                         </div>
-                        <span class="text-[10px] uppercase font-bold text-stone-400 border border-stone-200 dark:border-stone-700 rounded px-1.5 py-0.5">${item.country.split(' ')[0]}</span>
+                        <p class="text-xs text-stone-600 dark:text-stone-400 mb-4 line-clamp-2 h-8">${item.desc}</p>
                     </div>
-                    <p class="text-xs text-stone-600 dark:text-stone-400 mb-4 line-clamp-2 h-8">${item.desc}</p>
-                    <div class="flex flex-col gap-1 mb-4">
-                        <div class="flex flex-wrap gap-2 text-[10px]">
-                            <span class="bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-2 py-1 rounded">${item.courses[0]}</span>
-                             <span class="bg-stone-50 dark:bg-stone-900 text-stone-500 dark:text-stone-400 px-2 py-1 rounded border border-stone-100 dark:border-stone-700">${item.frequency}</span>
+                    <div>
+                        <div class="flex flex-wrap gap-2 text-[10px] mb-2">
+                            <span class="${tierClass} px-2 py-1 rounded font-bold">${item.tier}</span>
+                            <span class="bg-stone-50 dark:bg-stone-900 text-stone-500 dark:text-stone-400 px-2 py-1 rounded border border-stone-100 dark:border-stone-700">${item.frequency}</span>
+                        </div>
+                        <div class="text-[10px] text-sage-600 dark:text-sage-400 font-medium italic">
+                             <i class="fa-solid fa-graduation-cap"></i> ${item.curriculum ? item.curriculum.join(', ') : 'N/A'}
                         </div>
                     </div>
                 `;
@@ -359,8 +375,8 @@
                 row.onclick = () => openModal(item);
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900 dark:text-stone-100">${item.name}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-xs text-stone-500 dark:text-stone-400 font-mono">${item.structure}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500 dark:text-stone-400">${item.country}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs text-stone-500 dark:text-stone-400 font-mono">${item.tier} / ${item.curriculum ? item.curriculum[0] : ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500 dark:text-stone-400">${item.region}/${item.country}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500 dark:text-stone-400">${item.language}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-sage-600">View</td>
                 `;
@@ -370,15 +386,17 @@
         }
 
         function filterData() {
-            const term = state.search.toLowerCase();
+            const term = searchInput.value.toLowerCase();
             currentData = rawData.filter(item => {
-                const matchesSearch = item.name.toLowerCase().includes(term) || item.desc.toLowerCase().includes(term) || item.vars.toLowerCase().includes(term);
-                const matchesRegion = state.region === "All" ? true : item.region === state.region;
-                const matchesCountry = state.country === "All" ? true : item.country === state.country;
-                const matchesStructure = state.structure === "All" ? true : item.structure.includes(state.structure);
-                const matchesFrequency = state.frequency === "All" ? true : item.frequency.includes(state.frequency);
-                const matchesField = state.field === "All" ? true : item.courses.some(c => c.includes(state.field));
-                return matchesSearch && matchesRegion && matchesCountry && matchesStructure && matchesFrequency && matchesField;
+                const matchesSearch = item.name.toLowerCase().includes(term) || item.desc.toLowerCase().includes(term) || (item.vars && item.vars.toLowerCase().includes(term));
+                const matchesRegion = regionFilter.value === "All" ? true : item.region === regionFilter.value;
+                const matchesCountry = countryFilter.value === "All" ? true : item.country === countryFilter.value;
+                const matchesStructure = structureFilter.value === "All" ? true : (item.structure && item.structure.includes(structureFilter.value));
+                const matchesTier = tierFilter.value === "All" ? true : item.tier === tierFilter.value;
+                const matchesCurriculum = curriculumFilter.value === "All" ? true : (item.curriculum && item.curriculum.some(c => c.includes(curriculumFilter.value)));
+                const matchesFrequency = frequencyFilter.value === "All" ? true : item.frequency.includes(frequencyFilter.value);
+                
+                return matchesSearch && matchesRegion && matchesCountry && matchesStructure && matchesTier && matchesCurriculum && matchesFrequency;
             });
             render();
         }
@@ -386,38 +404,42 @@
         function openModal(item) {
             document.getElementById('modal-title').textContent = item.name;
             document.getElementById('modal-desc').textContent = item.desc;
-            document.getElementById('modal-vars').textContent = item.vars;
+            document.getElementById('modal-vars').textContent = item.vars || "N/A";
             document.getElementById('modal-lang').textContent = item.language;
             document.getElementById('modal-freq').textContent = item.frequency;
+            document.getElementById('modal-tier').textContent = item.tier;
+            document.getElementById('modal-papers').textContent = item.papers || "Standard Citation Metadata Available at Source.";
             document.getElementById('modal-link').href = item.url;
             
             const badgesDiv = document.getElementById('modal-badges');
             badgesDiv.innerHTML = `<span class="bg-sage-100 dark:bg-sage-900 text-sage-800 dark:text-sage-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.unit}</span>
-                                   <span class="bg-earth-100 dark:bg-stone-800 text-earth-800 dark:text-earth-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.structure}</span>`;
+                                   <span class="bg-earth-100 dark:bg-stone-800 text-earth-800 dark:text-earth-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.structure}</span>
+                                   <span class="bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.region}</span>`;
             
             const fieldsDiv = document.getElementById('modal-fields');
-            fieldsDiv.innerHTML = item.courses.map(c => `<span class="bg-white dark:bg-stone-800 border border-sage-200 dark:border-sage-800 text-sage-700 dark:text-sage-300 text-xs px-2 py-1 rounded shadow-sm">${c}</span>`).join('');
+            fieldsDiv.innerHTML = item.curriculum ? item.curriculum.map(c => `<span class="bg-white dark:bg-stone-800 border border-sage-200 dark:border-sage-800 text-sage-700 dark:text-sage-300 text-xs px-2 py-1 rounded shadow-sm">${c}</span>`).join('') : '';
             modal.classList.remove('hidden');
         }
 
         function closeModal() { modal.classList.add('hidden'); }
 
         // Event Listeners
-        searchInput.addEventListener('input', (e) => { state.search = e.target.value; filterData(); });
-        regionFilter.addEventListener('change', (e) => { state.region = e.target.value; filterData(); });
-        countryFilter.addEventListener('change', (e) => { state.country = e.target.value; filterData(); });
-        fieldFilter.addEventListener('change', (e) => { state.field = e.target.value; filterData(); });
-        structureFilter.addEventListener('change', (e) => { state.structure = e.target.value; filterData(); });
-        frequencyFilter.addEventListener('change', (e) => { state.frequency = e.target.value; filterData(); });
+        searchInput.addEventListener('input', filterData);
+        regionFilter.addEventListener('change', filterData);
+        countryFilter.addEventListener('change', filterData);
+        tierFilter.addEventListener('change', filterData);
+        curriculumFilter.addEventListener('change', filterData);
+        structureFilter.addEventListener('change', filterData);
+        frequencyFilter.addEventListener('change', filterData);
         
         resetBtn.addEventListener('click', () => {
-            state.search = ""; state.region = "All"; state.country = "All"; state.structure = "All"; state.field = "All"; state.frequency = "All";
-            searchInput.value = ""; regionFilter.value = "All"; countryFilter.value = "All"; structureFilter.value = "All"; fieldFilter.value = "All"; frequencyFilter.value = "All";
+            searchInput.value = ""; regionFilter.value = "All"; countryFilter.value = "All"; tierFilter.value = "All"; curriculumFilter.value = "All"; structureFilter.value = "All"; frequencyFilter.value = "All";
             filterData();
         });
 
         viewModeBtns.forEach(btn => btn.addEventListener('click', () => {
             state.viewMode = btn.dataset.mode;
+            viewModeBtns.forEach(b => b.classList.toggle('active', b === btn));
             contentArea.classList.toggle('hidden', state.viewMode === 'table');
             tableContainer.classList.toggle('hidden', state.viewMode === 'grid');
         }));
