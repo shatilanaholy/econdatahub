@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Public Use Data Sources for Economics</title>
+    <title>Public Use Data Resources for Economics</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- PapaParse (Included for future CSV support) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
 
@@ -60,9 +63,7 @@
                     <i class="fa-solid fa-moon dark:hidden"></i>
                     <i class="fa-solid fa-sun hidden dark:block"></i>
                 </button>
-                 <button id="view-mode-toggle" class="p-2 text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white transition" title="Toggle View">
-                    <i class="fa-solid fa-table-list text-lg"></i>
-                </button>
+                <!-- Redundant Header Toggle Removed -->
             </div>
         </div>
     </header>
@@ -72,12 +73,12 @@
         
         <section id="motivation" class="max-w-4xl mx-auto px-4 py-12 sm:py-16">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-serif font-bold text-stone-900 dark:text-white mb-4">Public Use Data Sources for Economics</h2>
+                <h2 class="text-3xl font-serif font-bold text-stone-900 dark:text-white mb-4">Public Use Data Resources for Economics</h2>
                 <div class="w-24 h-1 bg-earth-500 mx-auto rounded-full"></div>
             </div>
-            <div class="prose prose-stone mx-auto text-lg text-stone-700 dark:text-stone-300">
+            <div class="prose prose-stone mx-auto text-lg text-stone-700 dark:text-stone-300 text-center">
                 <p>
-                    EconDataHub catalogs over <strong>100 distinct public-use data sources</strong>. Datasets are organized by <strong>Difficulty Level</strong> and mapped to <strong>Course Relevance</strong>, allowing students and researchers to quickly identify relevant data for specific sub-fields.
+                    EconDataHub catalogs over <strong>145 distinct public-use data sources</strong>. Datasets are organized by <strong>Difficulty Level</strong> and mapped to <strong>Course Relevance</strong> to assist in selecting appropriate resources for empirical research.
                 </p>
             </div>
         </section>
@@ -93,7 +94,7 @@
                         <div class="relative">
                             <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-stone-400"></i>
                             <input type="text" id="search-input" placeholder="Search by name, variable, or topic..." 
-                                class="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-sage-500 outline-none transition dark:bg-stone-950 dark:border-stone-800 dark:text-white dark:placeholder-stone-600">
+                                class="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-lg focus:ring-2 focus:ring-sage-500 focus:border-sage-500 outline-none transition dark:bg-stone-950 dark:border-stone-800 dark:text-white">
                         </div>
                     </div>
 
@@ -164,8 +165,8 @@
                             <select id="frequency-filter" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-sm focus:ring-2 focus:ring-sage-500 outline-none cursor-pointer dark:bg-stone-950 dark:border-stone-800 dark:text-white">
                                 <option value="All">All Frequencies</option>
                                 <option value="Annual">Annual</option>
-                                <option value="Monthly">Monthly</option>
                                 <option value="Quarterly">Quarterly</option>
+                                <option value="Monthly">Monthly</option>
                                 <option value="Daily">Daily</option>
                             </select>
                         </div>
@@ -181,24 +182,28 @@
             <div class="mb-6 flex justify-between items-center">
                 <p class="text-stone-500 dark:text-stone-400 text-sm">Showing <span id="visible-count" class="font-bold text-stone-900 dark:text-white">0</span> sources</p>
                 <div class="flex gap-2">
-                   <button class="view-btn active text-stone-400 hover:text-stone-800 dark:hover:text-white" data-mode="grid"><i class="fa-solid fa-grid-2"></i> Grid</button>
+                   <!-- Renamed Grid to Card -->
+                   <button class="view-btn active text-stone-400 hover:text-stone-800 dark:hover:text-white" data-mode="grid"><i class="fa-solid fa-grid-2"></i> Card</button>
                    <button class="view-btn text-stone-400 hover:text-stone-800 dark:hover:text-white" data-mode="table"><i class="fa-solid fa-list"></i> Table</button>
                 </div>
             </div>
 
+            <!-- Loading State -->
+            <div id="loading" class="text-center py-12 text-stone-500 animate-pulse">Loading Repository...</div>
+
             <!-- Content Area -->
-            <div id="content-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="content-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
             
-            <div id="table-container" class="hidden bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden transition-colors duration-300">
+            <div id="table-container" class="hidden bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-stone-200 dark:divide-stone-800">
                         <thead class="bg-stone-50 dark:bg-stone-950">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Source</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Level / Relevance</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Region</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider">Language</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase tracking-wider text-right">Action</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase">Source</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase">Tier/Course</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase">Region</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase">Lang</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-stone-500 dark:text-stone-400 uppercase">Action</th>
                             </tr>
                         </thead>
                         <tbody id="table-body" class="bg-white dark:bg-stone-900 divide-y divide-stone-200 dark:divide-stone-800"></tbody>
@@ -207,24 +212,21 @@
             </div>
 
         </section>
-
     </main>
 
     <!-- Footer -->
-    <footer class="bg-stone-900 dark:bg-black border-t border-transparent dark:border-stone-800 text-stone-400 py-12 transition-colors duration-300">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <footer class="bg-stone-900 dark:bg-black border-t dark:border-stone-800 text-stone-400 py-12 text-center">
+        <div class="max-w-4xl mx-auto px-4">
             <h5 class="text-white font-serif font-bold mb-4">About EconDataHub</h5>
-            <p class="text-sm leading-relaxed mb-6">Created by Shatil Anaholy with the help of Google Gemini. Not all data source links have been verified. Use at your own discretion. For educational purposes only.</p>
-            <p class="text-xs text-stone-600 dark:text-stone-500">&copy; 2025 Shatil Anaholy.</p>
+            <p class="text-xs">&copy; 2025 Shatil Anaholy. Assistant Professor of Practice in Economics, UNL.</p>
         </div>
     </footer>
 
     <!-- Detail Modal -->
     <div id="detail-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-stone-900 bg-opacity-75 dark:bg-opacity-90 transition-opacity" aria-hidden="true" id="modal-backdrop"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            
+            <div class="fixed inset-0 bg-stone-900 bg-opacity-75 dark:bg-opacity-90 transition-opacity" id="modal-backdrop"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
             <div class="inline-block align-bottom bg-white dark:bg-stone-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl w-full border border-stone-200 dark:border-stone-800">
                 <div class="bg-white dark:bg-stone-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
@@ -234,45 +236,28 @@
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                             <h3 class="text-lg leading-6 font-medium text-stone-900 dark:text-white" id="modal-title">Dataset Name</h3>
                             <div class="mt-1 flex flex-wrap gap-2" id="modal-badges"></div>
+                            <div class="mt-4"><p class="text-sm text-stone-500 dark:text-stone-400" id="modal-desc"></p></div>
                             
-                            <div class="mt-4">
-                                <p class="text-sm text-stone-500" id="modal-desc"></p>
-                            </div>
-
                             <div class="mt-4 bg-sage-50 dark:bg-stone-950 p-3 rounded-lg border border-sage-100 dark:border-stone-800">
                                 <h4 class="text-xs font-bold uppercase text-sage-600 dark:text-sage-400 mb-2">Course Relevance</h4>
-                                <div class="flex flex-wrap gap-2" id="modal-fields"></div>
+                                <div class="flex flex-wrap gap-2" id="modal-courses"></div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-4 mt-6 border-t border-stone-100 dark:border-stone-800 pt-4">
-                                <div>
-                                    <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Difficulty Level</h4>
-                                    <p class="text-sm text-stone-800 dark:text-stone-200 font-bold" id="modal-tier"></p>
-                                </div>
-                                <div>
-                                    <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Language</h4>
-                                    <p class="text-sm text-stone-800 dark:text-stone-200" id="modal-lang"></p>
-                                </div>
+                                <div><h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Difficulty Level</h4><p class="text-sm text-stone-800 dark:text-stone-200 font-bold" id="modal-tier"></p></div>
+                                <div><h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Language</h4><p class="text-sm text-stone-800 dark:text-stone-200" id="modal-lang"></p></div>
+                                <div><h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Frequency</h4><p class="text-sm text-stone-800 dark:text-stone-200" id="modal-freq"></p></div>
+                                <div><h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Structure</h4><p class="text-sm text-stone-800 dark:text-stone-200 font-mono" id="modal-structure"></p></div>
                             </div>
 
-                            <div class="mt-4">
-                                <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Key Variables</h4>
-                                <p class="text-sm text-stone-800 dark:text-stone-300 font-mono bg-stone-50 dark:bg-stone-950 p-2 rounded" id="modal-vars"></p>
-                            </div>
-                            <div class="mt-4">
-                                <h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Impact / Citation</h4>
-                                <p class="text-sm text-stone-600 dark:text-stone-400 italic" id="modal-papers"></p>
-                            </div>
+                            <div class="mt-4"><h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Key Variables</h4><p class="text-sm text-stone-800 dark:text-stone-300 font-mono bg-stone-50 dark:bg-stone-950 p-2 rounded" id="modal-vars"></p></div>
+                            <div class="mt-4"><h4 class="text-xs font-bold uppercase text-stone-400 dark:text-stone-500 mb-2">Impact / Citation</h4><p class="text-sm text-stone-600 dark:text-stone-400 italic" id="modal-papers"></p></div>
                         </div>
                     </div>
                 </div>
                 <div class="bg-stone-50 dark:bg-stone-950 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-stone-100 dark:border-stone-800">
-                    <a href="#" id="modal-link" target="_blank" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sage-600 hover:bg-sage-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Visit Source
-                    </a>
-                    <button type="button" id="modal-close-btn" class="mt-3 w-full inline-flex justify-center rounded-md border border-stone-300 dark:border-stone-700 shadow-sm px-4 py-2 bg-white dark:bg-stone-900 text-base font-medium text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Close
-                    </button>
+                    <a href="#" id="modal-link" target="_blank" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sage-600 hover:bg-sage-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sage-500 sm:ml-3 sm:w-auto sm:text-sm">Visit Source</a>
+                    <button type="button" id="modal-close-btn" class="mt-3 w-full inline-flex justify-center rounded-md border border-stone-300 dark:border-stone-700 shadow-sm px-4 py-2 bg-white dark:bg-stone-900 text-base font-medium text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Close</button>
                 </div>
             </div>
         </div>
@@ -281,27 +266,41 @@
     <!-- Application Logic -->
     <script>
         let rawData = [];
-        let currentData = [];
         const state = { search: "", region: "All", country: "All", structure: "All", curriculum: "All", tier: "All", frequency: "All", viewMode: "grid" };
 
-        const contentArea = document.getElementById('content-area');
-        const tableBody = document.getElementById('table-body');
-        const tableContainer = document.getElementById('table-container');
-        const searchInput = document.getElementById('search-input');
-        const regionFilter = document.getElementById('region-filter');
-        const countryFilter = document.getElementById('country-filter');
-        const tierFilter = document.getElementById('tier-filter');
-        const curriculumFilter = document.getElementById('curriculum-filter');
-        const structureFilter = document.getElementById('structure-filter');
-        const frequencyFilter = document.getElementById('frequency-filter');
-        const visibleCount = document.getElementById('visible-count');
-        const resetBtn = document.getElementById('reset-filters');
-        const viewModeBtns = document.querySelectorAll('.view-btn');
-        const toggleViewBtn = document.getElementById('view-mode-toggle');
-        const modal = document.getElementById('detail-modal');
-        const modalCloseBtn = document.getElementById('modal-close-btn');
-        const modalBackdrop = document.getElementById('modal-backdrop');
-        const themeToggleBtn = document.getElementById('theme-toggle');
+        const elements = {
+            contentArea: document.getElementById('content-area'),
+            tableBody: document.getElementById('table-body'),
+            tableContainer: document.getElementById('table-container'),
+            loading: document.getElementById('loading'),
+            searchInput: document.getElementById('search-input'),
+            filters: {
+                region: document.getElementById('region-filter'),
+                country: document.getElementById('country-filter'),
+                curriculum: document.getElementById('curriculum-filter'),
+                tier: document.getElementById('tier-filter'),
+                structure: document.getElementById('structure-filter'),
+                frequency: document.getElementById('frequency-filter')
+            },
+            count: document.getElementById('visible-count'),
+            reset: document.getElementById('reset-filters'),
+            modal: {
+                el: document.getElementById('detail-modal'),
+                title: document.getElementById('modal-title'),
+                desc: document.getElementById('modal-desc'),
+                vars: document.getElementById('modal-vars'),
+                lang: document.getElementById('modal-lang'),
+                freq: document.getElementById('modal-freq'),
+                structure: document.getElementById('modal-structure'),
+                tier: document.getElementById('modal-tier'),
+                papers: document.getElementById('modal-papers'),
+                link: document.getElementById('modal-link'),
+                badges: document.getElementById('modal-badges'),
+                courses: document.getElementById('modal-courses'),
+                closeBtn: document.getElementById('modal-close-btn'),
+                backdrop: document.getElementById('modal-backdrop')
+            }
+        };
 
         async function loadRepository() {
             try {
@@ -309,50 +308,68 @@
                 if (!response.ok) throw new Error('Could not load data.json');
                 const data = await response.json();
                 
-                // Process and Alphabetize
                 rawData = data.sort((a, b) => a.name.localeCompare(b.name));
-                currentData = [...rawData];
                 
                 initUI();
+                elements.loading.style.display = 'none';
+                elements.contentArea.classList.remove('hidden');
+                render(rawData);
             } catch (error) {
                 console.error('Error fetching data:', error);
+                elements.loading.innerHTML = `<p class="text-red-500">Error loading data. Check console for details.</p>`;
             }
         }
 
         function initUI() {
             populateCountryFilter();
-            render();
+            // Automatically follow OS theme
+            const mq = window.matchMedia('(prefers-color-scheme: dark)');
+            const applyTheme = (e) => {
+                if (!localStorage.theme) {
+                    document.documentElement.classList.toggle('dark', e.matches);
+                }
+            };
+            mq.addEventListener('change', applyTheme);
+            if (localStorage.theme === 'dark' || (!localStorage.theme && mq.matches)) {
+                document.documentElement.classList.add('dark');
+            }
         }
 
         function populateCountryFilter() {
             const countries = new Set();
-            rawData.forEach(item => countries.add(item.country));
-            Array.from(countries).sort().forEach(country => {
-                const option = document.createElement('option');
-                option.value = country;
-                option.textContent = country;
-                countryFilter.appendChild(option);
+            rawData.forEach(item => { if(item.country) countries.add(item.country); });
+            const sorted = Array.from(countries).sort();
+            const sel = elements.filters.country;
+            sorted.forEach(val => {
+                const opt = document.createElement('option');
+                opt.value = val; opt.textContent = val;
+                sel.appendChild(opt);
             });
         }
 
-        function render() {
-            contentArea.innerHTML = '';
-            tableBody.innerHTML = '';
-            currentData.forEach(item => {
+        function render(data) {
+            elements.contentArea.innerHTML = '';
+            elements.tableBody.innerHTML = '';
+            elements.count.textContent = data.length;
+
+            data.forEach(item => {
+                const tierClass = item.tier === "Beginner" ? "text-sage-600 bg-sage-50 dark:bg-sage-900/30" : 
+                                  item.tier === "Intermediate" ? "text-earth-600 bg-earth-50 dark:bg-earth-900/30" : 
+                                  "text-blue-600 bg-blue-50 dark:bg-blue-900/30";
+                
+                const firstCourse = (item.curriculum && item.curriculum.length > 0) ? item.curriculum[0] : 'General';
+
+                // Grid View
                 const card = document.createElement('div');
                 card.className = "bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800 p-6 hover:shadow-md transition cursor-pointer group flex flex-col justify-between";
                 card.onclick = () => openModal(item);
                 
-                const tierClass = item.tier === "Beginner" ? "text-sage-600 bg-sage-50 dark:bg-sage-900/30" : 
-                                  item.tier === "Intermediate" ? "text-earth-600 bg-earth-50 dark:bg-earth-900/30" : 
-                                  "text-blue-600 bg-blue-50 dark:bg-blue-900/30";
-
                 card.innerHTML = `
                     <div>
                         <div class="flex justify-between items-start mb-3">
                             <div class="flex items-center gap-2">
                                 <div class="w-1.5 h-6 bg-sage-500 rounded-full group-hover:bg-earth-500 transition"></div>
-                                <h4 class="font-bold text-stone-900 dark:text-stone-100 leading-tight transition text-sm">${item.name}</h4>
+                                <h4 class="font-bold text-stone-900 dark:text-stone-100 leading-tight transition text-sm sm:text-base group-hover:text-sage-600 dark:group-hover:text-sage-400">${item.name}</h4>
                             </div>
                             <span class="text-[10px] uppercase font-bold text-stone-400 border border-stone-200 dark:border-stone-700 rounded px-1.5 py-0.5 whitespace-nowrap">${item.country.split(' ')[0]}</span>
                         </div>
@@ -361,121 +378,101 @@
                     <div>
                         <div class="flex flex-wrap gap-2 text-[10px] mb-2">
                             <span class="${tierClass} px-2 py-1 rounded font-bold">${item.tier}</span>
-                            <span class="bg-stone-50 dark:bg-stone-900 text-stone-500 dark:text-stone-400 px-2 py-1 rounded border border-stone-100 dark:border-stone-700">${item.frequency}</span>
+                             <span class="bg-stone-50 dark:bg-stone-900 text-stone-500 dark:text-stone-400 px-2 py-1 rounded border border-stone-100 dark:border-stone-700">${item.frequency}</span>
                         </div>
                         <div class="text-[10px] text-sage-600 dark:text-sage-400 font-medium italic">
-                             <i class="fa-solid fa-graduation-cap"></i> ${item.curriculum ? item.curriculum.join(', ') : 'N/A'}
+                             <i class="fa-solid fa-graduation-cap"></i> ${item.curriculum ? item.curriculum.join(', ') : ''}
                         </div>
                     </div>
                 `;
-                contentArea.appendChild(card);
+                elements.contentArea.appendChild(card);
 
+                // Table View
                 const row = document.createElement('tr');
                 row.className = "hover:bg-stone-50 dark:hover:bg-stone-800 transition cursor-pointer";
                 row.onclick = () => openModal(item);
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-stone-900 dark:text-stone-100">${item.name}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-xs text-stone-500 dark:text-stone-400 font-mono">${item.tier} / ${item.curriculum ? item.curriculum[0] : ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs text-stone-500 dark:text-stone-400 font-mono">${item.tier} / ${firstCourse}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500 dark:text-stone-400">${item.region}/${item.country}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-500 dark:text-stone-400">${item.language}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-sage-600">View</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-sage-600 dark:text-sage-400 hover:underline">View</td>
                 `;
-                tableBody.appendChild(row);
+                elements.tableBody.appendChild(row);
             });
-            visibleCount.textContent = currentData.length;
         }
 
         function filterData() {
-            const term = searchInput.value.toLowerCase();
-            currentData = rawData.filter(item => {
+            const term = elements.searchInput.value.toLowerCase();
+            const filtered = rawData.filter(item => {
                 const matchesSearch = item.name.toLowerCase().includes(term) || item.desc.toLowerCase().includes(term) || (item.vars && item.vars.toLowerCase().includes(term));
-                const matchesRegion = regionFilter.value === "All" ? true : item.region === regionFilter.value;
-                const matchesCountry = countryFilter.value === "All" ? true : item.country === countryFilter.value;
-                const matchesStructure = structureFilter.value === "All" ? true : (item.structure && item.structure.includes(structureFilter.value));
-                const matchesTier = tierFilter.value === "All" ? true : item.tier === tierFilter.value;
-                const matchesCurriculum = curriculumFilter.value === "All" ? true : (item.curriculum && item.curriculum.some(c => c.includes(curriculumFilter.value)));
-                const matchesFrequency = frequencyFilter.value === "All" ? true : item.frequency.includes(frequencyFilter.value);
+                const matchesRegion = elements.filters.region.value === "All" ? true : item.region === elements.filters.region.value;
+                const matchesCountry = elements.filters.country.value === "All" ? true : item.country === elements.filters.country.value;
+                const matchesStructure = elements.filters.structure.value === "All" ? true : (item.structure && item.structure.includes(elements.filters.structure.value));
+                const matchesTier = elements.filters.tier.value === "All" ? true : item.tier === elements.filters.tier.value;
+                const matchesFreq = elements.filters.frequency.value === "All" ? true : (item.frequency && item.frequency.includes(elements.filters.frequency.value));
                 
-                return matchesSearch && matchesRegion && matchesCountry && matchesStructure && matchesTier && matchesCurriculum && matchesFrequency;
+                let matchesCurriculum = true;
+                if(elements.filters.curriculum.value !== "All") {
+                    matchesCurriculum = item.curriculum && item.curriculum.includes(elements.filters.curriculum.value);
+                }
+
+                return matchesSearch && matchesRegion && matchesCountry && matchesStructure && matchesTier && matchesFreq && matchesCurriculum;
             });
-            render();
+            render(filtered);
         }
 
         function openModal(item) {
-            document.getElementById('modal-title').textContent = item.name;
-            document.getElementById('modal-desc').textContent = item.desc;
-            document.getElementById('modal-vars').textContent = item.vars || "N/A";
-            document.getElementById('modal-lang').textContent = item.language;
-            document.getElementById('modal-freq').textContent = item.frequency;
-            document.getElementById('modal-tier').textContent = item.tier;
-            document.getElementById('modal-papers').textContent = item.papers || "Standard Citation Metadata Available at Source.";
-            document.getElementById('modal-link').href = item.url;
+            elements.modal.title.textContent = item.name;
+            elements.modal.desc.textContent = item.desc;
+            elements.modal.vars.textContent = item.vars || "N/A";
+            elements.modal.lang.textContent = item.language;
+            elements.modal.freq.textContent = item.frequency;
+            elements.modal.structure.textContent = item.structure;
+            elements.modal.tier.textContent = item.tier;
+            elements.modal.papers.textContent = item.papers || "Metadata available at source.";
+            elements.modal.link.href = item.url;
             
-            const badgesDiv = document.getElementById('modal-badges');
-            badgesDiv.innerHTML = `<span class="bg-sage-100 dark:bg-sage-900 text-sage-800 dark:text-sage-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.unit}</span>
-                                   <span class="bg-earth-100 dark:bg-stone-800 text-earth-800 dark:text-earth-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.structure}</span>
-                                   <span class="bg-stone-200 dark:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.region}</span>`;
+            elements.modal.badges.innerHTML = `<span class="bg-sage-100 dark:bg-sage-900 text-sage-800 dark:text-sage-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.unit}</span>
+                                               <span class="bg-earth-100 dark:bg-stone-800 text-earth-800 dark:text-earth-200 text-xs font-semibold px-2.5 py-0.5 rounded">${item.structure}</span>`;
             
-            const fieldsDiv = document.getElementById('modal-fields');
-            fieldsDiv.innerHTML = item.curriculum ? item.curriculum.map(c => `<span class="bg-white dark:bg-stone-800 border border-sage-200 dark:border-sage-800 text-sage-700 dark:text-sage-300 text-xs px-2 py-1 rounded shadow-sm">${c}</span>`).join('') : '';
-            modal.classList.remove('hidden');
+            const courses = item.curriculum ? item.curriculum : [];
+            elements.modal.courses.innerHTML = courses.map(c => `<span class="bg-white dark:bg-stone-800 border border-sage-200 dark:border-sage-800 text-sage-700 dark:text-sage-300 text-xs px-2 py-1 rounded shadow-sm mr-2">${c}</span>`).join('');
+            
+            elements.modal.el.classList.remove('hidden');
         }
 
-        function closeModal() { modal.classList.add('hidden'); }
+        function closeModal() { elements.modal.el.classList.add('hidden'); }
 
-        // Event Listeners
-        searchInput.addEventListener('input', filterData);
-        regionFilter.addEventListener('change', filterData);
-        countryFilter.addEventListener('change', filterData);
-        tierFilter.addEventListener('change', filterData);
-        curriculumFilter.addEventListener('change', filterData);
-        structureFilter.addEventListener('change', filterData);
-        frequencyFilter.addEventListener('change', filterData);
+        Object.values(elements.filters).forEach(f => f.addEventListener('change', filterData));
+        elements.searchInput.addEventListener('input', filterData);
         
-        resetBtn.addEventListener('click', () => {
-            searchInput.value = ""; regionFilter.value = "All"; countryFilter.value = "All"; tierFilter.value = "All"; curriculumFilter.value = "All"; structureFilter.value = "All"; frequencyFilter.value = "All";
-            filterData();
+        elements.reset.addEventListener('click', () => {
+             Object.values(elements.filters).forEach(f => f.value = "All");
+             elements.searchInput.value = "";
+             filterData();
+        });
+        
+        elements.modal.closeBtn.onclick = closeModal;
+        elements.modal.backdrop.onclick = closeModal;
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
         });
 
-        viewModeBtns.forEach(btn => btn.addEventListener('click', () => {
-            state.viewMode = btn.dataset.mode;
-            viewModeBtns.forEach(b => b.classList.toggle('active', b === btn));
-            contentArea.classList.toggle('hidden', state.viewMode === 'table');
-            tableContainer.classList.toggle('hidden', state.viewMode === 'grid');
+        const toggleView = (mode) => {
+            state.viewMode = mode;
+            elements.contentArea.classList.toggle('hidden', mode === 'table');
+            elements.tableContainer.classList.toggle('hidden', mode === 'grid');
+        };
+
+        document.querySelectorAll('.view-btn').forEach(btn => btn.addEventListener('click', () => {
+            toggleView(btn.dataset.mode);
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b === btn));
         }));
 
-        // Theme Logic: Automatically follow OS/Browser settings
-        const mq = window.matchMedia('(prefers-color-scheme: dark)');
-        
-        function applyTheme(e) {
-            const dark = e.matches;
-            if (dark) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        }
-
-        // Initial apply based on current system setting
-        applyTheme(mq);
-
-        // Listen for real-time changes in system theme settings
-        mq.addEventListener('change', applyTheme);
-
-        // Manual toggle functionality
-        themeToggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            // If the user manually toggles, you could choose to save this in localStorage.
-            // For purely automatic tracking, we avoid localStorage persistence.
-        });
-
-        modalCloseBtn.onclick = closeModal;
-        modalBackdrop.onclick = closeModal;
-
-        // Initialize Application
         loadRepository();
     </script>
 </body>
 </html>
-
-
