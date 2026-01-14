@@ -2190,8 +2190,8 @@
     "papers": "CBO Budget and Economic Outlook (various years)"
   },
   {
-    "name": "Census Bureau (USA) - Data",
-    "desc": "U.S. Census Bureau data portal covering population, housing, business, geography, and program statistics (including major surveys and administrative series).",
+    "name": "Census Bureau (ACS) - Data",
+    "desc": "U.S. Census Bureau data portal covering population, housing, business, geography, and program statistics (including major surveys and administrative series, such as ACS).",
     "region": "North America",
     "country": "USA",
     "language": "English",
@@ -2370,4 +2370,5 @@
     "papers": "NBER Working Papers / Data Documentation (varies)"
   }
 ]
+
 
